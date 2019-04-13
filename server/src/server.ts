@@ -1,6 +1,6 @@
 import express from 'express';
 import http from 'http';
-import sio, {Socket} from 'socket.io';
+import sio from 'socket.io';
 import cors from 'cors';
 import {
     IdErrorTypes,
@@ -15,16 +15,18 @@ const io = sio(server, {});
 const users: ISocketUsers = {};
 
 app.use(cors());
-server.listen(process.env.PORT, () => console.log(`Server running on port: ${process.env.PORT}`));
+server.listen(process.env.PORT || 1337, () => console.log(`Server running on port: ${process.env.PORT || 1337}`));
 
-io.on(IdSocketVerb.CONNECTION, (socket: ISocket) => {
+io.on(IdSocketVerb.connect, (socket: ISocket) => {
+    console.log('One connection');
     // Registration
-    socket.on(IdSocketVerb.REGISTER, (id: number, callback: (resp: ISocketResponse<any>) => any) => {
+    socket.on(IdSocketVerb.register, (id: number, callback: any) => {
         if(id in users) {
             callback({
                 error: true,
                 errorType: IdErrorTypes.USER_EXISTS,
-                msg: 'User already exists! Please Login'
+                msg: 'User already exists! Please Login',
+                data: Object.keys(users)
             })
         }
 
@@ -32,22 +34,22 @@ io.on(IdSocketVerb.CONNECTION, (socket: ISocket) => {
         users[socket.me] = socket;
 
         // Broadcast fresh list of Online_Users
-        socket.broadcast.emit(IdSocketVerb.ONLINE_USERS, users);
+        socket.broadcast.emit(IdSocketVerb.online_users, Object.keys(users));
 
         callback({
             msg: 'Registration successful',
-            data: socket.me
+            data: Object.keys(users)
         });
     });
 
     // Send private message
-    socket.on(IdSocketVerb.PRIVATE_MSG_TRIGGER, (payload: IPrivateMessageTrigger, callback: (resp: ISocketResponse<any>) => any) => {
+    socket.on(IdSocketVerb.private_msg_trigger, (payload: IPrivateMessageTrigger, callback: (resp: ISocketResponse<any>) => any) => {
         if (payload.recipient in users) {
             const forwardMessage: IPrivateMessageForward = {
                 msg: payload.msg,
                 sender: socket.me
             };
-            users[payload.recipient].emit(IdSocketVerb.PRIVATE_MSG_FORWARD, forwardMessage )
+            users[payload.recipient].emit(IdSocketVerb.private_msg_forward, forwardMessage )
         }
 
         callback({
@@ -55,5 +57,6 @@ io.on(IdSocketVerb.CONNECTION, (socket: ISocket) => {
             errorType: IdErrorTypes.USER_OFFLINE,
             msg: 'User offline'
         })
-    })
+    });
+
 });

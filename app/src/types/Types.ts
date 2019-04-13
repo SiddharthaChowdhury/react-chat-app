@@ -1,5 +1,3 @@
-import {Socket} from "socket.io";
-
 export interface ISocketResponse <TData> {
     error?: boolean;
     errorType?: IdErrorTypes;
@@ -18,13 +16,6 @@ export interface IPrivateMessageForward {
     sender?: any;
 }
 
-export interface ISocketUsers {
-    [index: string]: Socket
-}
-
-export interface ISocket extends Socket{
-    [index: string]: any
-}
 export enum IdErrorTypes {
     USER_EXISTS = 'USER_EXISTS',
     USER_OFFLINE = 'USER_OFFLINE',
@@ -38,4 +29,3 @@ export enum IdSocketVerb {
     private_msg_trigger = 'private_msg_trigger',
     private_msg_forward = 'private_msg_forward',
 }
-

@@ -4,7 +4,7 @@ interface IUserProps {
     userList: Array<any>
 }
 
-export class Users extends React.PureComponent<IUserProps> {
+export class Home extends React.PureComponent<IUserProps> {
     public render = () => {
         const {userList} = this.props;
 
