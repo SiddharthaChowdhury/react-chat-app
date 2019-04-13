@@ -28,6 +28,8 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
                 msg: 'User already exists! Please Login',
                 data: Object.keys(users)
             })
+
+            return;
         }
 
         socket.me = id;
@@ -59,4 +61,9 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
         })
     });
 
+    socket.on(IdSocketVerb.disconnect, (reason: any) => {
+        console.log("Disconnect", reason);
+        delete users[socket.me];
+        socket.broadcast.emit(IdSocketVerb.online_users, Object.keys(users));
+    })
 });
