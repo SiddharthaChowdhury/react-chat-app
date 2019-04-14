@@ -3,12 +3,11 @@ import {IdSocketVerb} from "../types/Types";
 
 
 const server = `http://localhost:1337`;
-export class Socket {
-    public socket$: any;
+export class UtilSocket {
+    public conn = io(server);
     constructor (){
-        this.socket$ = io(server);
-        this.socket$.on(IdSocketVerb.connect, this.onConnect);
-        this.socket$.on(IdSocketVerb.disconnect, this.onDisconnect);
+        this.conn.on(IdSocketVerb.connect, this.onConnect);
+        this.conn.on(IdSocketVerb.disconnect, this.onDisconnect);
     }
 
     private onConnect = () => {
@@ -19,3 +18,5 @@ export class Socket {
         console.log('connection disconnected')
     };
 }
+
+export const socket = new UtilSocket();
