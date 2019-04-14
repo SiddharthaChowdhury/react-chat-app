@@ -23,6 +23,7 @@ export enum IdErrorTypes {
 
 export enum IdSocketVerb {
     connect = 'connect',
+    disconnect = 'disconnect',
     register = 'register',
     login = 'login',
     online_users = 'online_users',
