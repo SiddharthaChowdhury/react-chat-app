@@ -1,36 +1,79 @@
 import {IReducerActivity} from "../activity/reducerActivity";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
 import {IState} from "../../../config/IState";
-import {selectActivity} from "../activity/selectActivity";
+import {selectActivity, selectActivityMessage} from "../activity/selectActivity";
 import {connect} from "react-redux";
 import * as React from "react";
+import {Action, Dispatch} from "redux";
+import {actionMessage} from "../activity/actionActivity";
+import {Subject} from "rxjs";
+import {debounceTime, distinctUntilChanged, share} from "rxjs/operators";
 
 interface IChatWindowState {
-    activity: IReducerActivity
+    activity: IReducerActivity;
+    message: string;
 }
 
-interface IChatWindowDispatch {}
+interface IChatWindowDispatch {
+    onMessage: (message: string) => Action<any>
+}
 
 interface IChatWindowProps extends IChatWindowState, IChatWindowDispatch {}
 
-const ChatWindowDOM: React.FC<IChatWindowProps> = (props) => {
-    const {activity:{selected, identity}} = props;
+export const messageSubject = new Subject();
+export const messageSubject$ = messageSubject.pipe(
+    debounceTime(500),
+    distinctUntilChanged(),
+    share()
+);
 
-    if (!selected) {
-        return null;
+class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
+
+    componentDidMount(): void {
+        const {onMessage} = this.props;
+        messageSubject$.subscribe({
+            next: (data: any) => {
+                console.log('next ', data);
+                onMessage(data);
+            }
+        })
     }
 
-    if (selected === IdActivitySelectable.user) {
-        return (<div>Chat window coming soon, user: {identity}</div>)
+    render() {
+        const {activity:{selected, identity}} = this.props;
+
+        if (!selected) {
+            return null;
+        }
+
+        if (selected === IdActivitySelectable.user) {
+            return (
+                <div>
+                    <h3>{identity}</h3>
+                    <div className={'message-area'}/>
+                    <input type={'search'} onChange={this.handleMessage}/>
+                    <button>Send</button>
+                </div>
+            )
+        }
+
+        return (
+            <div>Room coming soon</div>
+        )
     }
 
-    return (
-        <div>Room coming soon</div>
-    )
-};
+    private handleMessage = (e: any) => {
+        messageSubject.next(e.target.value)
+    }
+}
 
 const mapState = (state: IState): IChatWindowState => ({
-    activity: selectActivity(state)
+    activity: selectActivity(state),
+    message: selectActivityMessage(state)
 });
 
-export const ChatWindow = connect(mapState, undefined)(ChatWindowDOM)
+const mapDispatch = (dispatch: Dispatch): IChatWindowDispatch => ({
+    onMessage: (message: string) => dispatch(actionMessage(message))
+});
+
+export const ChatWindow = connect(mapState, mapDispatch)(ChatWindowDOM);

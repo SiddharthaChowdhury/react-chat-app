@@ -3,12 +3,14 @@ import {Action} from "redux";
 
 export enum TypeActionActivity {
     Select = "Activity > Select",
-    Deselect = "Activity > Deselect"
+    Deselect = "Activity > Deselect",
+    Message = "Activity > Message"
 }
 
 export interface IActionActivity extends Action{
     select?: IdActivitySelectable;
     identity?: string;
+    message?: string;
     type: TypeActionActivity
 }
 
@@ -20,4 +22,9 @@ export const actionSelectActivity = (select: IdActivitySelectable, identity: str
 
 export const actionDeselectActivty = (): IActionActivity => ({
     type: TypeActionActivity.Deselect
+});
+
+export const actionMessage = (message: string): IActionActivity => ({
+    message,
+    type: TypeActionActivity.Message
 });
