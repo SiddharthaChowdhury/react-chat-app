@@ -18,11 +18,11 @@ const io = sio(server, {});
 const users: ISocketUsers = {};
 
 app.use(cors());
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.disable('x-powered-by')
 
-app.get('/ping', (req, res) => res.send('hello'))
+app.get('/ping', (req, res) => res.send('hello'));
 
 app.post('/register', (req: any, res: any) => {
     const {email, password} = req.body;

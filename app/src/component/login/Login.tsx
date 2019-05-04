@@ -1,13 +1,15 @@
-import React, {Fragment} from "react";
+import React, {ChangeEvent, Fragment} from "react";
 // @ts-ignore
 import logo from "../../logo.svg";
 import {connect} from "react-redux";
 import {Action, Dispatch} from "redux";
 import {thunkActionRequestLogin} from "./thunkActionLogin";
 import {IUserInfo} from "../../types/IUserInfo";
+import {ErrorMessage} from "../errorMessage/ErrorMessage";
 
 interface ILoginState {
-    userName: string
+    userName: string;
+    password: string;
 }
 
 interface ILoginDispatch {
@@ -17,25 +19,31 @@ interface ILoginDispatch {
 interface ILoginProps extends ILoginDispatch {}
 
 const initialLoginState: ILoginState = {
-    userName: ''
+    userName: '',
+    password: ''
 };
 
 class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
-    public state = initialLoginState;
+    public state: ILoginState = initialLoginState;
     public render = () => {
-        const {userName} = this.state;
+        const {userName, password} = this.state;
         const {onLogin} = this.props;
+        // @ts-ignore
         return (
             <div className="App">
                 <header className="content">
                     <img src={logo} className="App-logo" alt="logo" />
                     <div>
+                        <ErrorMessage />
                         <Fragment>
                             <div>
-                                <input type="text" name="userName" value={userName} onChange={this.onChange} placeholder="Name"/>
+                                <input type="text" name="userName" onChange={this.onChange} placeholder="Name"/>
                             </div>
                             <div>
-                                <button onClick={() => onLogin({userName})}>Sign in</button>
+                                <input type="password" name="password" onChange={this.onChange} placeholder="Password"/>
+                            </div>
+                            <div>
+                                <button onClick={() => onLogin({userName, password})}>Sign in</button>
                             </div>
                         </Fragment>
                     </div>
@@ -45,7 +53,8 @@ class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
     };
 
     private onChange = (e: any) => {
-        this.setState({userName: e.target.value})
+        const {name, value} = e.target;
+        this.setState({[name]: value} as Pick<ILoginState, keyof ILoginState>);
     }
 }
 

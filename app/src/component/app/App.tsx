@@ -2,12 +2,10 @@ import React, { PureComponent} from 'react';
 import './App.css';
 import {Login} from "../login/Login";
 import {Home} from "../home/Home";
-import {socket} from "../../util/utilSocket";
-import {IdSocketVerb} from "../../types/Types";
 import {IState} from "../../config/IState";
 import {thunkActionOnlineUsers} from "../home/onlineUsers/thunkActionOnlineUsers";
 import {Action, Dispatch} from "redux";
-import {selectApp} from "./selectApp";
+import {selectApp} from "../../selector/selectApp";
 import {connect} from "react-redux";
 
 interface IAppState {

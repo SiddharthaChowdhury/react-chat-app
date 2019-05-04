@@ -1,7 +1,7 @@
 import {IReducerActivity} from "../activity/reducerActivity";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
 import {IState} from "../../../config/IState";
-import {selectActivity, selectActivityMessage} from "../activity/selectActivity";
+import {selectActivity, selectActivityMessage} from "../../../selector/selectActivity";
 import {connect} from "react-redux";
 import * as React from "react";
 import {Action, Dispatch} from "redux";

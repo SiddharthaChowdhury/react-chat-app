@@ -1,7 +1,7 @@
 import * as React from "react";
 import {connect} from "react-redux";
 import {IState} from "../../../config/IState";
-import {selectOnline} from "./selectOnline";
+import {selectOnline} from "../../../selector/selectOnline";
 import "./styleOnlineUsers.css"
 import {Action, Dispatch} from "redux";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
