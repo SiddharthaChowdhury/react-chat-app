@@ -11,11 +11,11 @@ export class UtilSocket {
     }
 
     private onConnect = () => {
-        console.log('connection established')
+        console.log('conn established')
     };
 
     private onDisconnect = () => {
-        console.log('connection disconnected')
+        console.log('conn disconnected')
     };
 }
 
