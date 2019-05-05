@@ -10,7 +10,8 @@ import {
     ISocketResponse, ISocketUsers
 } from "./types/Types";
 import * as bodyParser from "body-parser";
-import * as bcrypt from 'bcrypt'
+import {login} from "./controller/login";
+import {registration} from "./controller/registration";
 
 const app       = express();
 const server    = http.createServer(app);
@@ -20,48 +21,10 @@ const users: ISocketUsers = {};
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.disable('x-powered-by')
+app.disable('x-powered-by');
 
 app.get('/ping', (req, res) => res.send('hello'));
-
-app.post('/authorize', (req: any, res: any, next: any) => {
-    const {email, password} = req.body;
-
-    if(!email || !password) {
-        res.status(400);
-        return res.json({err: 'Email and Password is required'})
-    }
-
-    const sql = `SELECT password FROM user WHERE email = '${email}'`;
-    conn.query(sql, (err, result) => {
-        if (err) throw err;
-
-        const userInfo = result[0];
-
-        if (!userInfo) {
-            next()
-        } else {
-            if (bcrypt.compareSync(password, result[0].password)){
-                res.status(200);
-                return res.json({msg: 'Login Successful'});
-            } else {
-                res.status(400);
-                return res.json({msg: 'Incorrect login information'});
-            }
-        }
-    })
-},(req: any, res: any) => {
-    const {email, password} = req.body;
-    const hash = bcrypt.hashSync(password, 7);
-    const sql = `INSERT INTO user (email, password) VALUES ('${email}', '${hash}')`;
-
-    conn.query(sql, (err, user) => {
-        if (err) throw err;
-
-        res.status(201);
-        return res.json({msg: "User is created", sql})
-    })
-});
+app.post('/authorize', login, registration);
 
 export const conn = mysql.createConnection({
     host     : 'localhost',
