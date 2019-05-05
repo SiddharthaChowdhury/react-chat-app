@@ -6,9 +6,12 @@ import "./styleOnlineUsers.css"
 import {Action, Dispatch} from "redux";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
 import {actionActivitySelect} from "../activity/actionActivity";
+import {IUserInfo} from "../../../types/IUserInfo";
+import {selectUserInfo} from "../../../selector/selectUserInfo";
 
 interface IOnlineUsersState {
-    onlineUsers: Array<string>
+    onlineUsers: Array<string>;
+    userInfo: IUserInfo;
 }
 interface IOnlineUsersDispatch {
     onClick: (selected: IdActivitySelectable, identity: string) => Action<any>
@@ -18,12 +21,15 @@ interface IOnlineUsersProps extends IOnlineUsersState, IOnlineUsersDispatch {}
 
 class OnlineUsersDOM extends React.PureComponent<IOnlineUsersProps>{
     public render(): React.ReactNode {
-        const {onlineUsers, onClick} = this.props;
+        const {onlineUsers, onClick, userInfo:{userName}} = this.props;
 
         return (
             <div>
                 {
-                    onlineUsers.map((user: any, _key: number) => {
+                    onlineUsers.map((user: string, _key: number) => {
+                        if(user === userName) {
+                            return <div className='onlineUserTab' key={_key}>-> <b>{user}</b></div>
+                        }
                         return <div key={_key} className='onlineUserTab' onClick={() => onClick(IdActivitySelectable.user, user)}>{user}</div>
                     })
                 }
@@ -33,7 +39,8 @@ class OnlineUsersDOM extends React.PureComponent<IOnlineUsersProps>{
 }
 
 const mapState = (state: IState): IOnlineUsersState => ({
-    onlineUsers: selectOnline(state)
+    onlineUsers: selectOnline(state),
+    userInfo: selectUserInfo(state),
 });
 
 const mapDispatch = (dispatch: Dispatch): IOnlineUsersDispatch => ({

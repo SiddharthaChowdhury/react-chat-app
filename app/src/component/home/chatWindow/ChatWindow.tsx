@@ -77,7 +77,7 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                         {(conversation[identity!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
                             return (
                                 <div key={index}>
-                                    <span>{message}</span> &nbsp;<b>{sender}</b>
+                                    <span>{message}</span> &nbsp;<small><i>{sender}</i></small>
                                 </div>
                             )
                         })}
