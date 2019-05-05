@@ -6,15 +6,19 @@ export interface ISocketResponse <TData> {
 }
 
 export interface IPrivateMessageTrigger {
+    id?: string;
     recipient: any;
     msg: any;
     sender?: any;
+    type: IdMessageType
 }
 
 export interface IPrivateMessageForward {
+    id: string;
     msg: any;
     sender?: any;
     timestamp?: string;
+    type: IdMessageType
 }
 
 export enum IdErrorTypes {
@@ -30,4 +34,12 @@ export enum IdSocketVerb {
     online_users = 'online_users',
     private_msg_trigger = 'private_msg_trigger',
     private_msg_forward = 'private_msg_forward',
+}
+
+export enum IdMessageType {
+    text = 'text',
+    audio = 'audio',
+    video = 'video',
+    picture = 'picture',
+    other = 'other'
 }

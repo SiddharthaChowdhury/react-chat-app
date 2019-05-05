@@ -5,13 +5,16 @@ import {selectActivity, selectActivityMessage} from "../../../selector/selectAct
 import {connect} from "react-redux";
 import * as React from "react";
 import {Action, Dispatch} from "redux";
-import {actionActivitySetConversation, actionSetActivityMessage} from "../activity/actionActivity";
+import {
+    actionActivitySetConversation,
+    actionSetActivityMessage
+} from "../activity/actionActivity";
 import {Subject} from "rxjs";
 import {debounceTime, distinctUntilChanged, share} from "rxjs/operators";
-import {IdSocketVerb, IPrivateMessageForward, IPrivateMessageTrigger} from "../../../types/Types";
+import {IdMessageType, IdSocketVerb, IPrivateMessageForward, IPrivateMessageTrigger} from "../../../types/Types";
 import {thunkActionSendMessage} from "./thunkActionChatWindow";
 import {socket} from "../../../util/utilSocket";
-import {IActivityConversation} from "../activity/IActivityConversation";
+import {IActivityMessages} from "../activity/IActivityConversation";
 
 interface IChatWindowState {
     activity: IReducerActivity;
@@ -21,7 +24,7 @@ interface IChatWindowState {
 interface IChatWindowDispatch {
     onMessage: (message: string) => Action<any>
     onMessageSend: (messageInfo: IPrivateMessageTrigger) => Action<any>,
-    onMessageReceived: (conversationMsg: IActivityConversation, identity: string) => Action<any>
+    onMessageReceived: (conversationMsg: IActivityMessages, identity: string) => Action<any>
 }
 
 interface IChatWindowProps extends IChatWindowState, IChatWindowDispatch {}
@@ -39,15 +42,20 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
         const {onMessage, onMessageReceived} = this.props;
         messageSubject$.subscribe({
             next: (data: any) => {
-                console.log('next ', data);
                 onMessage(data);
             }
         });
 
         socket.conn.on(IdSocketVerb.private_msg_forward, (messageInfo: IPrivateMessageForward) => {
-            const {msg, sender, timestamp} = messageInfo;
+            const {id, msg, sender, timestamp, type} = messageInfo;
             onMessageReceived(
-                {message: msg, sender, timestamp: timestamp || ''},
+                {
+                    id,
+                    message: msg,
+                    sender,
+                    time: timestamp!,
+                    type
+                },
                 sender
             );
             return;
@@ -57,16 +65,16 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
     render() {
         const {activity:{selected, identity, message, conversation}, onMessageSend} = this.props;
 
-        if (!selected && conversation!.length === 0) {
+        if (!selected && Object.keys(conversation).length === 0) {
             return null;
         }
 
-        if (selected === IdActivitySelectable.user || conversation!.length > 0) {
+        if (selected === IdActivitySelectable.user || Object.keys(conversation).length > 0) {
             return (
                 <div>
                     <h3>{identity}</h3>
                     <div className={'message-area'}>
-                        {conversation!.map(({message, timestamp, sender}: IActivityConversation, index: number) => {
+                        {(conversation[identity!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
                             return (
                                 <div key={index}>
                                     <span>{message}</span> &nbsp;<b>{sender}</b>
@@ -75,7 +83,11 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                         })}
                     </div>
                     <input type={'search'} onChange={this.handleMessage}/>
-                    <button onClick={() => onMessageSend({msg: message, recipient: identity})}>Send</button>
+                    <button onClick={() => onMessageSend({
+                        msg: message,
+                        recipient: identity,
+                        type: IdMessageType.text
+                    })}>Send</button>
                 </div>
             )
         }
@@ -98,7 +110,7 @@ const mapState = (state: IState): IChatWindowState => ({
 const mapDispatch = (dispatch: Dispatch): IChatWindowDispatch => ({
     onMessage: (message: string) => dispatch(actionSetActivityMessage(message)),
     onMessageSend: (messageInfo: IPrivateMessageTrigger) => dispatch(thunkActionSendMessage(messageInfo)),
-    onMessageReceived: (conversationMsg: IActivityConversation, sender: string) => dispatch(actionActivitySetConversation(conversationMsg, sender))
+    onMessageReceived: (conversationMsg: IActivityMessages, sender: string) => dispatch(actionActivitySetConversation(conversationMsg, sender))
 });
 
 export const ChatWindow = connect(mapState, mapDispatch)(ChatWindowDOM);

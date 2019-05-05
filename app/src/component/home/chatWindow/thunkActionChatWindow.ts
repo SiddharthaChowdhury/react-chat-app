@@ -4,13 +4,21 @@ import {actionActivitySetConversation} from "../activity/actionActivity";
 import {socket} from "../../../util/utilSocket";
 
 export const thunkActionSendMessage = (messageInfo: IPrivateMessageTrigger): any => (dispatch: Dispatch) => {
-    // console.log(messageInfo)
-    const {msg, recipient} = messageInfo;
+    const {msg, recipient, type} = messageInfo;
     const timeStamp = + new Date();
 
-    dispatch(actionActivitySetConversation({message: msg, sender: 'You', timestamp: timeStamp.toString()}, recipient));
+    dispatch(actionActivitySetConversation(
+        {
+            id: timeStamp.toString(),
+            message: msg,
+            sender: 'You',
+            time: timeStamp.toString(),
+            type
+        },
+        recipient
+    ));
 
-    socket.conn.emit(IdSocketVerb.private_msg_trigger, messageInfo, (resp: ISocketResponse<any>) => {
+    socket.conn.emit(IdSocketVerb.private_msg_trigger, {...messageInfo, id: timeStamp.toString()}, (resp: ISocketResponse<any>) => {
         if (resp.error) {
             console.log(resp.error);
             alert('User offline');

@@ -72,10 +72,13 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
     socket.on(IdSocketVerb.private_msg_trigger, (payload: IPrivateMessageTrigger, callback: (resp: ISocketResponse<any>) => any) => {
         if (payload.recipient in users) {
             const timestamp = + new Date();
+            const {msg, type, sender, id} = payload
             const forwardMessage: IPrivateMessageForward = {
-                msg: payload.msg,
+                id,
+                msg,
                 sender: socket.me,
-                timestamp: timestamp.toString()
+                timestamp: timestamp.toString(),
+                type
             };
 
             users[payload.recipient].emit(IdSocketVerb.private_msg_forward, forwardMessage);

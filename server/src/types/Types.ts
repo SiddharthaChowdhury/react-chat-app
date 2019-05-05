@@ -8,15 +8,19 @@ export interface ISocketResponse <TData> {
 }
 
 export interface IPrivateMessageTrigger {
+    id?: string;
     recipient: any;
     msg: any;
     sender?: any;
+    type: IdMessageType
 }
 
 export interface IPrivateMessageForward {
+    id?: string;
     msg: any;
     sender?: any;
     timestamp?: string;
+    type: IdMessageType
 }
 
 export interface ISocketUsers {
@@ -41,3 +45,10 @@ export enum IdSocketVerb {
     private_msg_forward = 'private_msg_forward',
 }
 
+export enum IdMessageType {
+    text = 'text',
+    audio = 'audio',
+    video = 'video',
+    picture = 'picture',
+    other = 'other'
+}
