@@ -14,6 +14,7 @@ export interface IPrivateMessageTrigger {
 export interface IPrivateMessageForward {
     msg: any;
     sender?: any;
+    timestamp?: string;
 }
 
 export enum IdErrorTypes {

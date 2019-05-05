@@ -5,7 +5,7 @@ import {selectOnline} from "../../../selector/selectOnline";
 import "./styleOnlineUsers.css"
 import {Action, Dispatch} from "redux";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
-import {actionSelectActivity} from "../activity/actionActivity";
+import {actionActivitySelect} from "../activity/actionActivity";
 
 interface IOnlineUsersState {
     onlineUsers: Array<string>
@@ -37,7 +37,7 @@ const mapState = (state: IState): IOnlineUsersState => ({
 });
 
 const mapDispatch = (dispatch: Dispatch): IOnlineUsersDispatch => ({
-    onClick: (selected: IdActivitySelectable, identity: string) => dispatch(actionSelectActivity(selected, identity))
+    onClick: (selected: IdActivitySelectable, identity: string) => dispatch(actionActivitySelect(selected, identity))
 });
 
 export default connect(mapState, mapDispatch)(OnlineUsersDOM)
