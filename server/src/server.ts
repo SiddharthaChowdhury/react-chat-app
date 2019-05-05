@@ -24,31 +24,43 @@ app.disable('x-powered-by')
 
 app.get('/ping', (req, res) => res.send('hello'));
 
-app.post('/register', (req: any, res: any) => {
+app.post('/authorize', (req: any, res: any, next: any) => {
     const {email, password} = req.body;
 
     if(!email || !password) {
         res.status(400);
         return res.json({err: 'Email and Password is required'})
     }
-    const sql = `SELECT id FROM user WHERE email = '${email}'`;
+
+    const sql = `SELECT password FROM user WHERE email = '${email}'`;
     conn.query(sql, (err, result) => {
         if (err) throw err;
 
-        if(result.length === 0) {
-            const hash = bcrypt.hashSync(password, 7);
-            const sql = `INSERT INTO user (email, password) VALUES ('${email}', '${hash}')`;
-            conn.query(sql, (err, user) => {
-                if (err) throw err;
+        const userInfo = result[0];
 
-                res.status(201);
-                return res.json({msg: "User is created", sql})
-            })
+        if (!userInfo) {
+            next()
         } else {
-            res.status(409);
-            return res.json({err: 'Email is already registered'});
+            if (bcrypt.compareSync(password, result[0].password)){
+                res.status(200);
+                return res.json({msg: 'Login Successful'});
+            } else {
+                res.status(400);
+                return res.json({msg: 'Incorrect login information'});
+            }
         }
-    });
+    })
+},(req: any, res: any) => {
+    const {email, password} = req.body;
+    const hash = bcrypt.hashSync(password, 7);
+    const sql = `INSERT INTO user (email, password) VALUES ('${email}', '${hash}')`;
+
+    conn.query(sql, (err, user) => {
+        if (err) throw err;
+
+        res.status(201);
+        return res.json({msg: "User is created", sql})
+    })
 });
 
 export const conn = mysql.createConnection({

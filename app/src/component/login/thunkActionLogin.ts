@@ -32,6 +32,8 @@ export const thunkActionRequestLogin = (loginInfo: IUserInfo): any => (dispatch:
         });
     })
     .catch(function (error: any) {
-        return dispatch(actionSetErrorMessage('Failed to register', IdErrorMessage.serverError))
+       const {data: {msg}} = error.response;
+
+        return dispatch(actionSetErrorMessage(msg || 'Unhandled error!', IdErrorMessage.serverError))
     });
 };
