@@ -31,12 +31,14 @@ interface IChatWindowProps extends IChatWindowState, IChatWindowDispatch {}
 
 export const messageSubject = new Subject();
 export const messageSubject$ = messageSubject.pipe(
-    debounceTime(500),
+    // debounceTime(500),
     distinctUntilChanged(),
     share()
 );
 
 class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
+
+    public state = {input: ''}
 
     componentDidMount(): void {
         const {onMessage, onMessageReceived} = this.props;
@@ -82,12 +84,8 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                             )
                         })}
                     </div>
-                    <input type={'search'} onChange={this.handleMessage}/>
-                    <button onClick={() => onMessageSend({
-                        msg: message,
-                        recipient: identity,
-                        type: IdMessageType.text
-                    })}>Send</button>
+                    <input type={'search'} onChange={this.handleOnChange} onKeyDown={this.handleOnKeyDown} value={this.state.input}/>
+                    <button onClick={this.onSubmit}>Send</button>
                 </div>
             )
         }
@@ -97,8 +95,26 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
         )
     }
 
-    private handleMessage = (e: any) => {
-        messageSubject.next(e.target.value)
+    private handleOnKeyDown = (e: any) => {
+        if (e.key === "Enter") {
+            this.onSubmit();
+            this.setState({input: ''})
+        }
+    };
+
+    private onSubmit = () => {
+        const {activity:{identity, message}, onMessageSend} = this.props;
+
+        onMessageSend({
+            msg: message,
+            recipient: identity,
+            type: IdMessageType.text
+        });
+    }
+
+    private handleOnChange = (e: any) => {
+        messageSubject.next(e.target.value);
+        this.setState({input: e.target.value});
     }
 }
 

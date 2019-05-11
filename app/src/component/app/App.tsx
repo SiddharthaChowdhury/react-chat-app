@@ -7,6 +7,8 @@ import {thunkActionOnlineUsers} from "../home/onlineUsers/thunkActionOnlineUsers
 import {Action, Dispatch} from "redux";
 import {selectApp} from "../../selector/selectApp";
 import {connect} from "react-redux";
+import {IdResponsiveRenderOnlyIn, Responsive} from "responsive-react/dist/Responsive";
+import {getDeviceTypeInfo, IDeviceTypeInfo} from "responsive-react";
 
 interface IAppState {
     isLoggedIn: boolean;
@@ -26,11 +28,20 @@ class AppDOM extends PureComponent<IAppProps> {
 
     public render = () => {
         const {isLoggedIn} = this.props;
-
+        const deviceInfo: IDeviceTypeInfo = getDeviceTypeInfo();
         if(isLoggedIn) {
             return (<Home />)
         }
-        return (<Login />);
+        return (
+            <React.Fragment>
+                <Responsive displayIn={[IdResponsiveRenderOnlyIn.Mobile, IdResponsiveRenderOnlyIn.Tablet]}>
+                    <div><pre>{JSON.stringify(getDeviceTypeInfo())}</pre></div>
+                </Responsive>
+                <Responsive displayIn={IdResponsiveRenderOnlyIn.Laptop}>
+                    <Login />
+                </Responsive>
+            </React.Fragment>
+        );
     };
 }
 
