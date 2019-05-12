@@ -9,7 +9,7 @@ export const login = (req: any, res: any, next: any) => {
         return res.json({err: 'Email and Password is required'})
     }
 
-    const sql = `SELECT password FROM user WHERE email = '${email}'`;
+    const sql = `SELECT password, id, name, email FROM user WHERE email = '${email}'`;
     conn.query(sql, (err, result) => {
         if (err) throw err;
 
@@ -19,8 +19,9 @@ export const login = (req: any, res: any, next: any) => {
             next()
         } else {
             if (bcrypt.compareSync(password, result[0].password)){
+                userInfo.password = undefined;
                 res.status(200);
-                return res.json({msg: 'Login Successful'});
+                return res.json({msg: 'Login Successful', data: userInfo});
             } else {
                 res.status(400);
                 return res.json({msg: 'Incorrect login information'});

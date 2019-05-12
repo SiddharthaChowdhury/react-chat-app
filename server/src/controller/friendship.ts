@@ -2,7 +2,7 @@ import {conn} from "../server";
 
 export const searchFriend = (req: any, res: any) => {
     const {str} = req.body;
-    const sqlSearch = `SELECT name, email, id FROM user WHERE name LIKE ${str} OR email = ${str}`;
+    const sqlSearch = `SELECT name, email, id FROM user WHERE name LIKE '${str}' OR email = '${str}'`;
 
     conn.query(sqlSearch, (err, searchResults) => {
         if(err) throw err;
@@ -44,8 +44,8 @@ export const sendFriendship = (req: any, res: any) => {
 };
 
 export const acceptFriendRequest = (req: any, res: any) => {
-    const {userId, friendId, note} = req.body;
-    const sqlAcceptRequest = `UPDATE friends SET active = 'true', updatedAt = ${new Date().toLocaleString()} WHERE fromId = ${friendId} AND toId = ${userId} AND active = 'false'`;
+    const {userId, friendId} = req.body;
+    const sqlAcceptRequest = `UPDATE friends SET active = 'true', updatedAt = '${new Date().toLocaleString()}' WHERE fromId = '${friendId}' AND toId = '${userId}' AND active = 'false'`;
 
     conn.query(sqlAcceptRequest, (err, updt) => {
         if(err) throw err;
@@ -57,7 +57,7 @@ export const acceptFriendRequest = (req: any, res: any) => {
 
 export const getPendingFriendship = (req: any, res: any) => {
     const {userId} = req.body;
-    const sqlPendingRequests = `SELECT id, name, email 
+    const sqlPendingRequests = `SELECT ur.id, name, email 
                                 FROM friends fr JOIN user ur 
                                 ON fr.fromId = ur.id 
                                 WHERE fr.toId = '${userId}' AND active = 'false'`;

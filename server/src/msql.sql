@@ -15,7 +15,7 @@ CREATE TABLE `chat`.`messages`(
     `fromId` INT NOT NULL,
     `toId` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` TIMESTAMP NOT NULL,
+    `updatedAt` TIMESTAMP NULL,
     PRIMARY KEY(`id`) USING BTREE
 );
 
@@ -26,6 +26,6 @@ CREATE TABLE `chat`.`friends`(
     `fromId` INT NOT NULL,
     `toId` INT NOT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` TIMESTAMP NOT NULL,
+    `updatedAt` TIMESTAMP NULL,
     PRIMARY KEY(`id`) USING BTREE
 );
