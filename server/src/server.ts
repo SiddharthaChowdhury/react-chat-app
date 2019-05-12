@@ -12,7 +12,13 @@ import {
 import * as bodyParser from "body-parser";
 import {login} from "./controller/login";
 import {registration} from "./controller/registration";
-import {acceptFriendRequest, getPendingFriendship, searchFriend, sendFriendship} from "./controller/friendship";
+import {
+    acceptFriendRequest,
+    getExistingFriends,
+    getPendingFriendship,
+    searchFriend,
+    sendFriendship
+} from "./controller/friendship";
 import {auth} from "./apiMiddlewares/auth";
 
 const app       = express();
@@ -31,6 +37,7 @@ app.post('/send-friend-request', auth, sendFriendship);
 app.put('/accept-friend-request', auth, acceptFriendRequest);
 app.get('/pending-friend-requests', auth, getPendingFriendship);
 app.post('/search-friend', auth, searchFriend);
+app.get('/already-friends', auth, getExistingFriends);
 
 export const conn = mysql.createConnection({
     host     : 'localhost',

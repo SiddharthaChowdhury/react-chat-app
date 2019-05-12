@@ -6,12 +6,12 @@ import "./styleOnlineUsers.css"
 import {Action, Dispatch} from "redux";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
 import {actionActivitySelect} from "../activity/actionActivity";
-import {IUserInfo} from "../../../types/IUserInfo";
+import {IAuthUserInfo} from "../../../types/IUserInfo";
 import {selectUserInfo} from "../../../selector/selectUserInfo";
 
 interface IOnlineUsersState {
     onlineUsers: Array<string>;
-    userInfo: IUserInfo;
+    userInfo: IAuthUserInfo;
 }
 interface IOnlineUsersDispatch {
     onClick: (selected: IdActivitySelectable, identity: string) => Action<any>

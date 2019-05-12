@@ -1,5 +1,5 @@
 import {Action} from "redux";
-import {IUserInfo} from "../../types/IUserInfo";
+import {IAuthUserInfo} from "../../types/IUserInfo";
 
 export enum TypeActionLogin {
     Request = "Login > Request",
@@ -7,17 +7,17 @@ export enum TypeActionLogin {
 }
 
 export interface IActionLogin extends Action{
-    userInfo?: IUserInfo;
+    userInfo?: IAuthUserInfo;
     isLoggedIn?: boolean;
     type: TypeActionLogin
 }
 
-export const actionLoginRequest = (userInfo: IUserInfo): IActionLogin => ({
+export const actionLoginRequest = (userInfo: IAuthUserInfo): IActionLogin => ({
     userInfo,
     type: TypeActionLogin.Request
 });
 
-export const actionLoginResponse = (userInfo?: IUserInfo, isLoggedIn?: boolean): IActionLogin => ({
+export const actionLoginResponse = (userInfo?: IAuthUserInfo, isLoggedIn?: boolean): IActionLogin => ({
     userInfo,
     isLoggedIn,
     type: TypeActionLogin.Response

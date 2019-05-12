@@ -5,6 +5,15 @@ export interface ISocketResponse <TData> {
     data?: TData;
 }
 
+export interface IUserInfo {
+    id: number;
+    name?: string;
+    email: string;
+    password?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
 export interface IPrivateMessageTrigger {
     id?: string;
     recipient: any;

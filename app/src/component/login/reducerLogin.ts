@@ -1,9 +1,9 @@
 import {IActionLogin, TypeActionLogin} from "./actionLogin";
-import {IUserInfo} from "../../types/IUserInfo";
+import {IAuthUserInfo} from "../../types/IUserInfo";
 
 export interface IReducerLoginState {
     isLoggedIn?: boolean;
-    userInfo?: IUserInfo
+    userInfo?: IAuthUserInfo
 }
 
 export const initialLoginState: IReducerLoginState = {

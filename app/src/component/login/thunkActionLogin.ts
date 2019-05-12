@@ -3,7 +3,7 @@ import {Dispatch} from "redux";
 import {IdSocketVerb, ISocketResponse} from "../../types/Types";
 import {socket} from "../../util/utilSocket";
 import {actionOnlineUsersUpdate} from "../home/onlineUsers/actionOnlineUsers";
-import {IUserInfo} from "../../types/IUserInfo";
+import {IAuthUserInfo} from "../../types/IUserInfo";
 import axios from 'axios';
 import api from "../../config/api";
 import {actionSetErrorMessage} from "../errorMessage/actionErrorMessage";
@@ -11,7 +11,7 @@ import {IdErrorMessage} from "../errorMessage/IdErrorMessage";
 import {utilPersistence} from "../../util/utilPersistence/utilPersistence";
 import {IdPersistence} from "../../util/utilPersistence/IdPersistence";
 
-export const thunkActionRequestLogin = (loginInfo: IUserInfo): any => (dispatch: Dispatch) => {
+export const thunkActionRequestLogin = (loginInfo: IAuthUserInfo): any => (dispatch: Dispatch) => {
     const {userName, password} = loginInfo;
     const {url, method} = api.register;
     axios({

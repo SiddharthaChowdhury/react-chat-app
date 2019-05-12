@@ -4,7 +4,7 @@ import logo from "../../logo.svg";
 import {connect} from "react-redux";
 import {Action, Dispatch} from "redux";
 import {thunkActionRequestLogin} from "./thunkActionLogin";
-import {IUserInfo} from "../../types/IUserInfo";
+import {IAuthUserInfo} from "../../types/IUserInfo";
 import {ErrorMessage} from "../errorMessage/ErrorMessage";
 
 interface ILoginState {
@@ -13,7 +13,7 @@ interface ILoginState {
 }
 
 interface ILoginDispatch {
-    onLogin: (userInfo: IUserInfo) => Action<any>
+    onLogin: (userInfo: IAuthUserInfo) => Action<any>
 }
 
 interface ILoginProps extends ILoginDispatch {}
@@ -59,7 +59,7 @@ class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
 }
 
 export const mapDispatch = (dispatch: Dispatch): ILoginDispatch => ({
-    onLogin: (userInfo: IUserInfo) => dispatch(thunkActionRequestLogin(userInfo))
+    onLogin: (userInfo: IAuthUserInfo) => dispatch(thunkActionRequestLogin(userInfo))
 });
 
 export const Login = connect(undefined, mapDispatch)(LoginDOM);

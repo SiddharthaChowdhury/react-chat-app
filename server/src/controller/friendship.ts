@@ -77,3 +77,19 @@ export const getPendingFriendship = (req: any, res: any) => {
         return res.json({data: users})
     })
 };
+
+export const getExistingFriends = (req: any, res: any) => {
+    const {id} = utilToken.extractToken(req.get('token'));
+
+    const sqlFriends = `SELECT ur.id, name, email 
+                        FROM friends fr JOIN user ur 
+                        ON fr.fromId = ur.id OR fr.toId = ur.id
+                        WHERE (fr.fromId = '${id}' OR fr.toId = '${id}') AND fr.active = 'true'`;
+
+    conn.query(sqlFriends, (err, friends) => {
+        if (err) throw err;
+
+        res.status(200);
+        return res.json({data: friends})
+    })
+}
