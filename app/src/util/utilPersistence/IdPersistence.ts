@@ -1,4 +1,4 @@
-export const enum IdPersistence {
+export enum IdPersistence {
     auth = 'auth',
 }
 

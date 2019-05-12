@@ -1,7 +1,7 @@
 import {IdPersistence, PersistenceData} from "./IdPersistence";
 import {initialAuth} from "./initialPersistence";
 
-export const enum PersistenceMode {
+export enum PersistenceMode {
     Update = 'Update',
     Write = 'Write',
 }

@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 import {conn} from "../server";
+import {utilToken} from "../util/utilToken";
 
 export const registration = (req: any, res: any, next: any) => {
     const {email, password} = req.body;
@@ -14,7 +15,7 @@ export const registration = (req: any, res: any, next: any) => {
             if (err) throw err;
 
             res.status(201);
-            return res.json({msg: "User is created", data: user[0]})
+            return res.json({msg: "User is created", data: {token: utilToken.generateToken(user[0])}})
         });
     })
 };

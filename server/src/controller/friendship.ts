@@ -1,7 +1,10 @@
 import {conn} from "../server";
+import {utilToken} from "../util/utilToken";
 
 export const searchFriend = (req: any, res: any) => {
     const {str} = req.body;
+    const {id} = utilToken.extractToken(req.get('token'));
+
     const sqlSearch = `SELECT name, email, id FROM user WHERE name LIKE '${str}' OR email = '${str}'`;
 
     conn.query(sqlSearch, (err, searchResults) => {
@@ -13,10 +16,12 @@ export const searchFriend = (req: any, res: any) => {
 };
 
 export const sendFriendship = (req: any, res: any) => {
-    const {friendId, userId, note} = req.body;
-    const sqlVerifyUsers = `SELECT email FROM user WHERE id IN ('${userId}', '${friendId}')`;
-    const sqlIsAlreadyFriend = `SELECT active FROM friends WHERE (fromId = '${userId}' AND toId = '${friendId}') OR (fromId = '${friendId}' AND toId = '${userId}')`;
-    const sqlCreateFrndRequest = `INSERT INTO friends (message, fromId, toId) VALUES ('${note}', '${userId}', '${friendId}')`;
+    const {friendId, note} = req.body;
+    const {id} = utilToken.extractToken(req.get('token'));
+
+    const sqlVerifyUsers = `SELECT email FROM user WHERE id IN ('${id}', '${friendId}')`;
+    const sqlIsAlreadyFriend = `SELECT active FROM friends WHERE (fromId = '${id}' AND toId = '${friendId}') OR (fromId = '${friendId}' AND toId = '${id}')`;
+    const sqlCreateFrndRequest = `INSERT INTO friends (message, fromId, toId) VALUES ('${note}', '${id}', '${friendId}')`;
 
     conn.query(sqlVerifyUsers, (err, users) => {
         if (err) throw err;
@@ -44,8 +49,10 @@ export const sendFriendship = (req: any, res: any) => {
 };
 
 export const acceptFriendRequest = (req: any, res: any) => {
-    const {userId, friendId} = req.body;
-    const sqlAcceptRequest = `UPDATE friends SET active = 'true', updatedAt = '${new Date().toLocaleString()}' WHERE fromId = '${friendId}' AND toId = '${userId}' AND active = 'false'`;
+    const {friendId} = req.body;
+    const {id} = utilToken.extractToken(req.get('token'));
+
+    const sqlAcceptRequest = `UPDATE friends SET active = 'true', updatedAt = '${new Date().toLocaleString()}' WHERE fromId = '${friendId}' AND toId = '${id}' AND active = 'false'`;
 
     conn.query(sqlAcceptRequest, (err, updt) => {
         if(err) throw err;
@@ -56,11 +63,12 @@ export const acceptFriendRequest = (req: any, res: any) => {
 };
 
 export const getPendingFriendship = (req: any, res: any) => {
-    const {userId} = req.body;
+    const {id} = utilToken.extractToken(req.get('token'));
+
     const sqlPendingRequests = `SELECT ur.id, name, email 
                                 FROM friends fr JOIN user ur 
                                 ON fr.fromId = ur.id 
-                                WHERE fr.toId = '${userId}' AND active = 'false'`;
+                                WHERE fr.toId = '${id}' AND active = 'false'`;
 
     conn.query(sqlPendingRequests, (err, users) => {
         if (err) throw err;

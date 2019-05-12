@@ -8,6 +8,8 @@ import axios from 'axios';
 import api from "../../config/api";
 import {actionSetErrorMessage} from "../errorMessage/actionErrorMessage";
 import {IdErrorMessage} from "../errorMessage/IdErrorMessage";
+import {utilPersistence} from "../../util/utilPersistence/utilPersistence";
+import {IdPersistence} from "../../util/utilPersistence/IdPersistence";
 
 export const thunkActionRequestLogin = (loginInfo: IUserInfo): any => (dispatch: Dispatch) => {
     const {userName, password} = loginInfo;
@@ -21,6 +23,10 @@ export const thunkActionRequestLogin = (loginInfo: IUserInfo): any => (dispatch:
         }
     })
     .then(function (response) {
+        const {msg, data: {token}} = response.data;
+
+        utilPersistence.setValue(IdPersistence.auth, {token});
+
         socket.conn.emit(IdSocketVerb.register, loginInfo.userName, (resp: ISocketResponse<any>) => {
             if (!resp.error) {
                 dispatch(actionLoginResponse(loginInfo,true));

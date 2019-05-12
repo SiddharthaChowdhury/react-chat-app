@@ -13,6 +13,7 @@ import * as bodyParser from "body-parser";
 import {login} from "./controller/login";
 import {registration} from "./controller/registration";
 import {acceptFriendRequest, getPendingFriendship, searchFriend, sendFriendship} from "./controller/friendship";
+import {auth} from "./apiMiddlewares/auth";
 
 const app       = express();
 const server    = http.createServer(app);
@@ -26,10 +27,10 @@ app.disable('x-powered-by');
 
 app.get('/ping', (req, res) => res.send('hello'));
 app.post('/authorize', login, registration);
-app.post('/send-friend-request', sendFriendship);
-app.put('/accept-friend-request', acceptFriendRequest);
-app.post('/pending-friend-requests', getPendingFriendship);
-app.post('/search-friend', searchFriend);
+app.post('/send-friend-request', auth, sendFriendship);
+app.put('/accept-friend-request', auth, acceptFriendRequest);
+app.get('/pending-friend-requests', auth, getPendingFriendship);
+app.post('/search-friend', auth, searchFriend);
 
 export const conn = mysql.createConnection({
     host     : 'localhost',
