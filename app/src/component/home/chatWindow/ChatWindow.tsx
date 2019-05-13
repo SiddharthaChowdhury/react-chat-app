@@ -112,7 +112,7 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
         });
     }
 
-    private handleOnChange = (e: any) => {
+    private handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         messageSubject.next(e.target.value);
         this.setState({input: e.target.value});
     }

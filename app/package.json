@@ -17,7 +17,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "responsive-react": "^1.1.1",
-    "rxjs": "^6.4.0",
+    "rxjs": "^6.5.2",
     "socket.io-client": "^2.2.0",
     "typescript": "3.4.3"
   },

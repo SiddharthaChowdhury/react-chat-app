@@ -52,7 +52,7 @@ class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
         )
     };
 
-    private onChange = (e: any) => {
+    private onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
         this.setState({[name]: value} as Pick<ILoginState, keyof ILoginState>);
     }

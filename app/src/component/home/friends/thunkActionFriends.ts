@@ -4,7 +4,6 @@ import axios from "axios";
 import {actionUpdateFriendsList} from "./actionFriends";
 
 export const thunkActionFriends = (): any => (dispatch: Dispatch) => {
-    // const {userName, password} = loginInfo;
     const {url, method, headers} = api.friendList;
     axios({
         url,
@@ -23,4 +22,4 @@ export const thunkActionFriends = (): any => (dispatch: Dispatch) => {
     .catch(function (error: any) {
         console.log(error.response);
     });
-}
+};

@@ -5,23 +5,35 @@ export enum TypeActionFriends {
     Response = "Friends > Response",
     Search = "Friends > Search",
     Add = "Friends > Add",
-    Update = "Friends > Update",
+    UpdateFriendlist = "Friends > Update",
     Accept = "Friends > Accept",
+    Select = "Friend > Select",
     Decline = "Friends > Decline",
 }
 
 export interface IActionFriends extends Action {
-    friendId?: string;
+    friend?: IUserInfo;
     friendList?: Array<IUserInfo>
     type: TypeActionFriends;
 }
 
-export const actionFriendsSendRequest = (friendId: string): IActionFriends => ({
-    friendId,
+export const actionFriendsSendRequest = (friend: IUserInfo): IActionFriends => ({
+    friend,
     type: TypeActionFriends.Add
 });
 
+export const actionFriendSelect = (friend: IUserInfo): IActionFriends => ({
+    friend,
+    type: TypeActionFriends.Select
+});
+
+
 export const actionUpdateFriendsList = (friendList: Array<IUserInfo>): IActionFriends => ({
     friendList,
-    type: TypeActionFriends.Update
+    type: TypeActionFriends.UpdateFriendlist
+});
+
+export const actionUpdateFriendsSearch = (friendList: Array<IUserInfo>): IActionFriends => ({
+    friendList,
+    type: TypeActionFriends.Search
 });

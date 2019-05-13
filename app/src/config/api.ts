@@ -6,5 +6,6 @@ const {token} = utilPersistence.getValue(IdPersistence.auth);
 
 export default {
     register: {method: 'post', url: host+`/authorize`},
-    friendList: {method: 'get', url: host+'/already-friends', headers: {token: JSON.stringify(token)}}
+    friendList: {method: 'get', url: host+'/already-friends', headers: {token: JSON.stringify(token)}},
+    searchFriend: {method: 'post', url: host+'/search-friend', headers: {token: JSON.stringify(token)}},
 }

@@ -5,6 +5,7 @@ import {thunkActionFriends} from "./thunkActionFriends";
 import {connect} from "react-redux";
 import {IUserInfo} from "../../../types/Types";
 import {selectFriends} from "../../../selector/selectFriends";
+import {FriendSearch} from "./FriendSearch";
 
 interface IFriendsState {
     friends: Array<IUserInfo>;
@@ -24,11 +25,14 @@ class FriendsDOM extends React.PureComponent<IFriendsProps> {
         const {friends} = this.props;
 
         return (
-            <div>
-                {friends.map(({name, email, id}: IUserInfo, index: number) => {
-                    return <div data-id={id} key={index}>{name} - <i>{email}</i></div>
-                })}
-            </div>
+            <React.Fragment>
+                <div>
+                    {friends.map(({name, email, id}: IUserInfo, index: number) => {
+                        return <div data-id={id} key={index}>{name} - <i>{email}</i></div>
+                    })}
+                </div>
+                <FriendSearch/>
+            </React.Fragment>
         );
     }
 }
