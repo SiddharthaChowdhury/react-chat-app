@@ -2,7 +2,6 @@ import {IUserInfo} from "../../../types/Types";
 import {Action, Dispatch} from "redux";
 import * as React from "react";
 import {IState} from "../../../config/IState";
-import {actionFriendSelect} from "./actionFriends";
 import {selectFriendsSearch} from "../../../selector/selectFriends";
 import {connect} from "react-redux";
 import Container from "reactstrap/lib/Container";
@@ -22,7 +21,6 @@ interface IFriendSearchState {
 
 interface IFriendsSearchDispatch {
     onFriendSearch: (str: string) => Action<any>;
-    onFriendSelect: (friendInfo: IUserInfo) => Action<any>;
 }
 
 interface IFriendProps extends IFriendSearchState, IFriendsSearchDispatch {}
@@ -77,7 +75,7 @@ class FriendSearchDOM extends React.PureComponent<IFriendProps> {
                     }
                     {searchedFriends.map(({id, name, email}, _key) => {
                         return(
-                            <Row key={_key} data-friendId={id}>{name} - {email}</Row>
+                            <Row key={_key} data-friendid={id}>{name} - {email}</Row>
                         );
                     })}
                 </Row>
@@ -96,7 +94,6 @@ const mapState = (state: IState): IFriendSearchState => ({
 });
 
 const mapDispatch = (dispatch: Dispatch): IFriendsSearchDispatch => ({
-    onFriendSelect: (friendInfo: IUserInfo) => dispatch(actionFriendSelect(friendInfo)),
     onFriendSearch: (query: string) => dispatch(thunkActionFriendsSearch(query))
 });
 

@@ -7,7 +7,6 @@ export enum TypeActionFriends {
     Add = "Friends > Add",
     UpdateFriendlist = "Friends > Update",
     Accept = "Friends > Accept",
-    Select = "Friend > Select",
     Decline = "Friends > Decline",
 }
 
@@ -21,12 +20,6 @@ export const actionFriendsSendRequest = (friend: IUserInfo): IActionFriends => (
     friend,
     type: TypeActionFriends.Add
 });
-
-export const actionFriendSelect = (friend: IUserInfo): IActionFriends => ({
-    friend,
-    type: TypeActionFriends.Select
-});
-
 
 export const actionUpdateFriendsList = (friendList: Array<IUserInfo>): IActionFriends => ({
     friendList,
