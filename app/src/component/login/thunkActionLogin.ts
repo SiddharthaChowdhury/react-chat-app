@@ -12,14 +12,18 @@ import {utilPersistence} from "../../util/utilPersistence/utilPersistence";
 import {IdPersistence} from "../../util/utilPersistence/IdPersistence";
 
 export const thunkActionRequestLogin = (loginInfo: IAuthUserInfo): any => (dispatch: Dispatch) => {
-    const {userName, password} = loginInfo;
+    const {userName, password, name} = loginInfo;
+
+    console.log('name: ', loginInfo)
+
     const {url, method} = api.register;
     axios({
         url,
         method,
         data: {
             email: userName,
-            password
+            password,
+            name
         }
     })
     .then(function (response) {

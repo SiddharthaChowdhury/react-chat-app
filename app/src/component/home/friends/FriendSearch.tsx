@@ -4,8 +4,6 @@ import * as React from "react";
 import {IState} from "../../../config/IState";
 import {selectFriendsSearch} from "../../../selector/selectFriends";
 import {connect} from "react-redux";
-import Container from "reactstrap/lib/Container";
-import {Form, FormGroup, Input, Label, Row} from "reactstrap";
 import {thunkActionFriendsSearch} from "./thunkActionFriendsSearch";
 import {Subject, Subscription} from "rxjs";
 import {debounceTime, distinctUntilChanged} from "rxjs/operators";
@@ -59,27 +57,27 @@ class FriendSearchDOM extends React.PureComponent<IFriendProps> {
         const {loading} = this.state;
 
         return (
-            <Container>
-                <Row>
-                    <Form>
-                        <FormGroup>
-                            <Label for="exampleEmail">Email</Label>
-                            <Input type="email" placeholder="Search by Email" onChange={this.handleSearchInput} value={this.state.input} />
-                        </FormGroup>
-                    </Form>
-                </Row>
-                <Row>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <span>Email</span>
+                            <input type="email" placeholder="Search by Email" onChange={this.handleSearchInput} value={this.state.input} />
+                        </div>
+                    </div>
+                </div>
+                <div>
                     {loading && <small>Loading...</small>}
                     {(!searchedFriends || searchedFriends.length === 0) &&
-                        <Row><i>Nothing to show</i></Row>
+                        <div><i>Nothing to show</i></div>
                     }
                     {searchedFriends.map(({id, name, email}, _key) => {
                         return(
-                            <Row key={_key} data-friendid={id}>{name} - {email}</Row>
+                            <div key={_key} data-friendid={id}>{name} - {email}</div>
                         );
                     })}
-                </Row>
-            </Container>
+                </div>
+            </div>
         );
     }
 

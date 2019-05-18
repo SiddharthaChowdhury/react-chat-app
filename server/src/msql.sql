@@ -3,8 +3,9 @@ CREATE TABLE IF NOT EXISTS `chat`.`user`(
     `name` VARCHAR(100) NULL DEFAULT NULL,
     `email` VARCHAR(200) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
+    `avatar` TEXT NULL,
     `createdAt` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updatedAt` TIMESTAMP NOT NULL,
+    `updatedAt` TIMESTAMP,
     PRIMARY KEY(`id`) USING BTREE
 );
 

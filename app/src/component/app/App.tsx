@@ -35,7 +35,7 @@ class AppDOM extends PureComponent<IAppProps> {
         return (
             <React.Fragment>
                 <Responsive displayIn={[IdResponsiveRenderOnlyIn.Mobile, IdResponsiveRenderOnlyIn.Tablet]}>
-                    <div><pre>{JSON.stringify(getDeviceTypeInfo())}</pre></div>
+                    <Login />
                 </Responsive>
                 <Responsive displayIn={IdResponsiveRenderOnlyIn.Laptop}>
                     <Login />

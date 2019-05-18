@@ -6,7 +6,6 @@ import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import {configureStore} from "./config/store";
 import {ResponsiveWatcher} from "responsive-react";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
     <Provider store={configureStore()}>
