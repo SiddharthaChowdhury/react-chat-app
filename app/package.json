@@ -10,6 +10,7 @@
     "@types/react": "16.8.13",
     "@types/react-dom": "16.8.4",
     "axios": "^0.18.0",
+    "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
@@ -37,8 +38,11 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@types/enzyme": "^3.9.3",
     "@types/react-redux": "^7.0.6",
     "@types/reactstrap": "^8.0.1",
-    "@types/socket.io-client": "^1.4.32"
+    "@types/socket.io-client": "^1.4.32",
+    "enzyme": "^3.9.0",
+    "react-test-renderer": "^16.8.6"
   }
 }
