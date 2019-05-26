@@ -1,9 +1,10 @@
 import * as React from 'react';
 import {ExpansionPanel, ExpansionPanelDetails, ExpansionPanelSummary, Grid, Typography} from "@material-ui/core";
+import OnlineUsers from "../onlineUsers/OnlineUsers";
 
-interface ISideNavProps {}
+interface ISideBarProps {}
 
-export const SideNav: React.FC<ISideNavProps> = (props) => {
+export const SideBar: React.FC<ISideBarProps> = (props) => {
     const [expanded, setExpanded] = React.useState('people');
     const handleChange = (panel: any) => (event: any, newExpanded: any): any => {
         setExpanded(newExpanded ? panel : false);
@@ -16,9 +17,7 @@ export const SideNav: React.FC<ISideNavProps> = (props) => {
                     <Typography><b>People</b></Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <Typography>
-                        List of people
-                    </Typography>
+                    <OnlineUsers/>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
             <ExpansionPanel square expanded={expanded === 'groups'} onChange={handleChange('groups')}>

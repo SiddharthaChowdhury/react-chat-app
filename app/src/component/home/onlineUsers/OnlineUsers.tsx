@@ -2,12 +2,13 @@ import * as React from "react";
 import {connect} from "react-redux";
 import {IState} from "../../../config/IState";
 import {selectOnline} from "../../../selector/selectOnline";
-import "./styleOnlineUsers.css"
+import "./styleOnlineUsers.scss"
 import {Action, Dispatch} from "redux";
 import {IdActivitySelectable} from "../activity/IdActivitySelectable";
 import {actionActivitySelect} from "../activity/actionActivity";
 import {IAuthUserInfo} from "../../../types/IUserInfo";
 import {selectUserInfo} from "../../../selector/selectUserInfo";
+import {Grid} from "@material-ui/core";
 
 interface IOnlineUsersState {
     onlineUsers: Array<string>;
@@ -22,18 +23,32 @@ interface IOnlineUsersProps extends IOnlineUsersState, IOnlineUsersDispatch {}
 class OnlineUsersDOM extends React.PureComponent<IOnlineUsersProps>{
     public render(): React.ReactNode {
         const {onlineUsers, onClick, userInfo:{userName}} = this.props;
+        let me: React.ReactNode | null = null;
 
         return (
-            <div>
+            <Grid item className={'onlineUsersList'}>
                 {
                     onlineUsers.map((user: string, _key: number) => {
                         if(user === userName) {
-                            return <div className='onlineUserTab' key={_key}>-> <b>{user}</b></div>
+                            me = (
+                                <Grid className='onlineUserTab' key={_key}>
+                                    <span className="onlineDot"/>
+                                    <b>{user}</b>
+                                </Grid>
+                            );
+
+                            return null
                         }
-                        return <div key={_key} className='onlineUserTab' onClick={() => onClick(IdActivitySelectable.user, user)}>{user}</div>
+                        return (
+                            <Grid key={_key} className='onlineUserTab' onClick={() => onClick(IdActivitySelectable.user, user)}>
+                                <span className="onlineDot"/>
+                                <span>{user}</span>
+                            </Grid>
+                        )
                     })
                 }
-            </div>
+                {me}
+            </Grid>
         )
     }
 }

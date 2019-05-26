@@ -4,5 +4,14 @@
 
   .viewport {
     margin: 0 auto;
+    height: 80vh;
+
+    .appContentWrapper {
+      height: 85vh;
+
+      .appContent {
+        background-color: azure;
+      }
+    }
   }
 }

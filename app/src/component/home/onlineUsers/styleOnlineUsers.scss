@@ -1,0 +1,15 @@
+.onlineUsersList {
+    .onlineUserTab {
+        cursor: pointer;
+        margin: 5px;
+
+        .onlineDot {
+            height: 10px;
+            width: 10px;
+            background-color: green;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+        }
+    }
+}

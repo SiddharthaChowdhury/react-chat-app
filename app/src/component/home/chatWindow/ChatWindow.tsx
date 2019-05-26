@@ -10,11 +10,13 @@ import {
     actionSetActivityMessage
 } from "../activity/actionActivity";
 import {Subject} from "rxjs";
-import {debounceTime, distinctUntilChanged, share} from "rxjs/operators";
+import {distinctUntilChanged, share} from "rxjs/operators";
 import {IdMessageType, IdSocketVerb, IPrivateMessageForward, IPrivateMessageTrigger} from "../../../types/Types";
 import {thunkActionSendMessage} from "./thunkActionChatWindow";
 import {socket} from "../../../util/utilSocket";
 import {IActivityMessages} from "../activity/IActivityConversation";
+import "./chatWindow.scss"
+import {Grid} from "@material-ui/core";
 
 interface IChatWindowState {
     activity: IReducerActivity;
@@ -66,28 +68,44 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 
     render() {
         const {activity:{selected, identity, message, conversation}, onMessageSend} = this.props;
+        const element = document.getElementById("chatContainer");
+
+        if( element ) {
+            element.scrollTop = element.scrollHeight
+        }
 
         if (!selected && Object.keys(conversation).length === 0) {
-            return null;
+            // todo: choose self
+            return (
+                null
+            );
         }
 
         if (selected === IdActivitySelectable.user || Object.keys(conversation).length > 0) {
             return (
-                <div>
-                    <h3>{identity}</h3>
-                    <div className={'message-area'}>
-                        {(conversation[identity!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
-                            return (
-                                <div key={index}>
-                                    <span>{message}</span> &nbsp;<small><i>{sender}</i></small>
-                                </div>
-                            )
-                        })}
-                    </div>
-                    <input type={'search'} onChange={this.handleOnChange} onKeyDown={this.handleOnKeyDown} value={this.state.input}/>
-                    <button onClick={this.onSubmit}>Send</button>
-                </div>
-            )
+                <Grid container className={"chatWindowContainer"}>
+                    <Grid item className={"chatIdentityContainer"}>
+                        {identity}
+                    </Grid>
+
+                    <Grid item className={"chatWindowWrapper"}>
+                        <Grid item id={"chatContainer"} className={"chatContainer"}>
+                            {(conversation[identity!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
+                                return (
+                                    <div key={index}>
+                                        <span>{message}</span> &nbsp;<small><i>{sender}</i></small>
+                                    </div>
+                                )
+                            })}
+                        </Grid>
+                        <Grid className={"chatInputContainer"}>
+                            <input className={"chatInput"} type={"search"} onChange={this.handleOnChange} onKeyDown={this.handleOnKeyDown} value={this.state.input}/>
+                            <button disabled={true}>#</button>
+                            <button onClick={this.onSubmit}>Send</button>
+                        </Grid>
+                    </Grid>
+                </Grid>
+            );
         }
 
         return (
