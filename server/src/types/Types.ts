@@ -7,6 +7,13 @@ export interface ISocketResponse <TData> {
     data?: TData;
 }
 
+export interface IAuthUserInfo {
+    id?: string
+    email: string;
+    password?: string;
+    name: string;
+}
+
 export interface IUserInfo {
     id: number;
     name?: string;
@@ -16,9 +23,10 @@ export interface IUserInfo {
     updatedAt?: string;
 }
 
+
 export interface IPrivateMessageTrigger {
     id?: string;
-    recipient: any;
+    recipient: IAuthUserInfo;
     msg: any;
     sender?: any;
     type: IdMessageType

@@ -18,8 +18,12 @@ import {IActivityMessages} from "../activity/IActivityConversation";
 import "./chatWindow.scss";
 import {IAuthUserInfo} from "../../../types/IUserInfo";
 import {Grid} from "@material-ui/core";
+import {selectOnline} from "../../../selector/selectOnline";
+import {selectUserInfo} from "../../../selector/selectUserInfo";
 
 interface IChatWindowState {
+    userInfo: IAuthUserInfo,
+    onlineUsers: Array<IAuthUserInfo>,
     activity: IReducerActivity;
     message: string;
 }
@@ -40,11 +44,21 @@ export const messageSubject$ = messageSubject.pipe(
 );
 
 class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
+    public readonly state: any;
 
-    public state = {input: ''};
+    constructor(props: IChatWindowProps) {
+        super(props);
+        this.state = {input: '', onlineUsers: this.props.onlineUsers}
+    }
+
+    componentWillReceiveProps(nextProps: Readonly<IChatWindowProps>): void {
+        const { onlineUsers } = nextProps;
+        this.setState({onlineUsers})
+    }
 
     componentDidMount(): void {
         const {onMessage, onMessageReceived} = this.props;
+
         messageSubject$.subscribe({
             next: (data: any) => {
                 onMessage(data);
@@ -53,22 +67,28 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 
         socket.conn.on(IdSocketVerb.private_msg_forward, (messageInfo: IPrivateMessageForward) => {
             const {id, msg, sender, timestamp, type} = messageInfo;
-            onMessageReceived(
-                {
-                    id,
-                    message: msg,
-                    sender,
-                    time: timestamp!,
-                    type
-                },
-                sender
-            );
+            const senderInfo = this.state.onlineUsers.find((user: IAuthUserInfo) => {
+                return user.id === sender
+            });
+
+            if (senderInfo && sender) {
+                onMessageReceived(
+                    {
+                        id,
+                        message: msg,
+                        sender,
+                        time: timestamp!,
+                        type
+                    },
+                    senderInfo
+                );
+            }
             return;
         })
     }
 
     render() {
-        const {activity:{selected, identity, message, conversation}, onMessageSend} = this.props;
+        const {activity:{selected, identity, conversation}} = this.props;
         const element = document.getElementById("chatContainer");
 
         if( element ) {
@@ -83,7 +103,7 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
         }
 
         if ((identity && selected === IdActivitySelectable.user) || (conversation && Object.keys(conversation).length > 0)) {
-            const {email, name}: IAuthUserInfo = identity!;
+            const {email, name, id}: IAuthUserInfo = identity!;
 
             return (
                 <Grid container className={"chatWindowContainer"}>
@@ -93,10 +113,10 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 
                     <Grid item className={"chatWindowWrapper"}>
                         <Grid item id={"chatContainer"} className={"chatContainer"}>
-                            {(conversation[email!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
+                            {(conversation[id!] || []).map(({message, time, sender, name, email}: any, index: number) => {
                                 return (
-                                    <div key={index} className={"msgSegment"}>
-                                        <span>{message}</span> &nbsp;<small><i>{sender}</i></small>
+                                    <div key={index} className={"msgSegment"} data-userid={sender}>
+                                        <span>{message}</span> &nbsp;<small><i>{sender === 'You' ? '' : email}</i></small>
                                     </div>
                                 )
                             })}
@@ -126,11 +146,13 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
     private onSubmit = () => {
         const {activity:{identity, message}, onMessageSend} = this.props;
 
-        onMessageSend({
-            msg: message,
-            recipient: identity,
-            type: IdMessageType.text
-        });
+        if (identity && message) {
+            onMessageSend({
+                msg: message,
+                recipient: identity,
+                type: IdMessageType.text
+            });
+        }
     };
 
     private handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,6 +162,8 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 }
 
 const mapState = (state: IState): IChatWindowState => ({
+    userInfo: selectUserInfo(state),
+    onlineUsers: selectOnline(state),
     activity: selectActivity(state),
     message: selectActivityMessage(state)
 });

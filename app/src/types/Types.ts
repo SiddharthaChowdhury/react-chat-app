@@ -1,3 +1,5 @@
+import {IAuthUserInfo} from "./IUserInfo";
+
 export interface ISocketResponse <TData> {
     error?: boolean;
     errorType?: IdErrorTypes;
@@ -16,7 +18,7 @@ export interface IUserInfo {
 
 export interface IPrivateMessageTrigger {
     id?: string;
-    recipient: any;
+    recipient: IAuthUserInfo;
     msg: any;
     sender?: any;
     type: IdMessageType
@@ -25,7 +27,7 @@ export interface IPrivateMessageTrigger {
 export interface IPrivateMessageForward {
     id: string;
     msg: any;
-    sender?: any;
+    sender?: string;
     timestamp?: string;
     type: IdMessageType
 }

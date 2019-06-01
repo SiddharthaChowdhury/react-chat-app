@@ -4,14 +4,14 @@ import {actionActivitySetConversation} from "../activity/actionActivity";
 import {socket} from "../../../util/utilSocket";
 
 export const thunkActionSendMessage = (messageInfo: IPrivateMessageTrigger): any => (dispatch: Dispatch) => {
-    const {msg, recipient, type} = messageInfo;
+    const {msg, recipient, type, sender} = messageInfo;
     const timeStamp = + new Date();
 
     dispatch(actionActivitySetConversation(
         {
             id: timeStamp.toString(),
             message: msg,
-            sender: 'You',
+            sender: 'You', // have sender object
             time: timeStamp.toString(),
             type
         },
@@ -27,4 +27,4 @@ export const thunkActionSendMessage = (messageInfo: IPrivateMessageTrigger): any
 
         return;
     });
-}
+};
