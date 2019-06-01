@@ -1,9 +1,10 @@
 import {IdActivitySelectable} from "./IdActivitySelectable";
 import {IActionActivity, TypeActionActivity} from "./actionActivity";
+import {IAuthUserInfo} from "../../../types/IUserInfo";
 
 export interface IReducerActivity {
     selected?: IdActivitySelectable
-    identity?: string
+    identity?: IAuthUserInfo
     message?: string,
     discussion?: [],
     conversation?: any
@@ -11,7 +12,7 @@ export interface IReducerActivity {
 
 const initialActivityState: IReducerActivity = {
     selected: undefined,
-    identity: '',
+    identity: undefined,
     message: '',
     discussion: [], // chat room
     conversation: {}
@@ -43,16 +44,22 @@ const reducerActivitySetTypings = (state: IReducerActivity, {message}: IActionAc
 
 const reducerActivityStoreConversation = (state: IReducerActivity, action: IActionActivity): IReducerActivity => {
     const {conversation, select, identity} = action;
+    if( identity ) {
+        const {id, name, email} = identity;
 
-    if (!state.conversation[identity!]) {
-        state.conversation[identity!] = []
+        if (!state.conversation[id!]) {
+            state.conversation[id!] = []
+        }
+
+        state.conversation[id!].push({...conversation, ...identity});
+
+        return ({
+            ...state,
+            selected: select,
+            identity,
+            conversation: {...state.conversation}
+        })
     }
-    state.conversation[identity!].push(conversation);
 
-    return ({
-        ...state,
-        selected: select,
-        identity,
-        conversation: {...state.conversation}
-    })
+    return state
 };

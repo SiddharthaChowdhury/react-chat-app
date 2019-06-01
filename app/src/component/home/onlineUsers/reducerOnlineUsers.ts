@@ -1,7 +1,8 @@
 import {IActionOnlineUsers, TypeActionOnlineUsers} from "./actionOnlineUsers";
+import {IAuthUserInfo} from "../../../types/IUserInfo";
 
 export interface IReducerOnlineUsers {
-    onlineUsers: Array<string>
+    onlineUsers: Array<IAuthUserInfo>
 }
 
 const initialOnlineUsersState: IReducerOnlineUsers = {

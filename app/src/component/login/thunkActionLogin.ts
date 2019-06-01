@@ -12,28 +12,29 @@ import {utilPersistence} from "../../util/utilPersistence/utilPersistence";
 import {IdPersistence} from "../../util/utilPersistence/IdPersistence";
 
 export const thunkActionRequestLogin = (loginInfo: IAuthUserInfo): any => (dispatch: Dispatch) => {
-    const {userName, password, name} = loginInfo;
-
-    console.log('name: ', loginInfo)
+    const {email, password, name} = loginInfo;
 
     const {url, method} = api.register;
     axios({
         url,
         method,
         data: {
-            email: userName,
+            email,
             password,
             name
         }
     })
     .then(function (response) {
         const {msg, data: {token}} = response.data;
+        const {id, email, name} = token;
 
-        utilPersistence.setValue(IdPersistence.auth, {token});
+        utilPersistence.setValue(IdPersistence.auth, {...token});
 
-        socket.conn.emit(IdSocketVerb.register, loginInfo.userName, (resp: ISocketResponse<any>) => {
+        socket.conn.emit(IdSocketVerb.register, id, (resp: ISocketResponse<any>) => {
             if (!resp.error) {
-                dispatch(actionLoginResponse(loginInfo,true));
+
+                console.log('socket message', resp);
+                dispatch(actionLoginResponse({id, email, name},true));
                 dispatch(actionOnlineUsersUpdate(resp.data));
                 return;
             }

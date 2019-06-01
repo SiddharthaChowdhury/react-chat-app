@@ -11,29 +11,30 @@ import {selectUserInfo} from "../../../selector/selectUserInfo";
 import {Grid} from "@material-ui/core";
 
 interface IOnlineUsersState {
-    onlineUsers: Array<string>;
+    onlineUsers: Array<IAuthUserInfo>;
     userInfo: IAuthUserInfo;
 }
 interface IOnlineUsersDispatch {
-    onClick: (selected: IdActivitySelectable, identity: string) => Action<any>
+    onClick: (selected: IdActivitySelectable, identity: IAuthUserInfo) => Action<any>
 }
 
 interface IOnlineUsersProps extends IOnlineUsersState, IOnlineUsersDispatch {}
 
 class OnlineUsersDOM extends React.PureComponent<IOnlineUsersProps>{
     public render(): React.ReactNode {
-        const {onlineUsers, onClick, userInfo:{userName}} = this.props;
+        const {onlineUsers, onClick, userInfo:{email}} = this.props;
         let me: React.ReactNode | null = null;
-
+        const myEmail = email;
         return (
             <Grid item className={'onlineUsersList'}>
                 {
-                    onlineUsers.map((user: string, _key: number) => {
-                        if(user === userName) {
+                    onlineUsers.map((user: IAuthUserInfo, _key: number) => {
+                        const {id, email, name} = user;
+                        if( myEmail === email) {
                             me = (
                                 <Grid className='onlineUserTab' key={_key}>
                                     <span className="onlineDot"/>
-                                    <b>{user}</b>
+                                    <b>{user.email}</b>
                                 </Grid>
                             );
 
@@ -42,7 +43,7 @@ class OnlineUsersDOM extends React.PureComponent<IOnlineUsersProps>{
                         return (
                             <Grid key={_key} className='onlineUserTab' onClick={() => onClick(IdActivitySelectable.user, user)}>
                                 <span className="onlineDot"/>
-                                <span>{user}</span>
+                                <span>{user.email}</span>
                             </Grid>
                         )
                     })
@@ -59,7 +60,7 @@ const mapState = (state: IState): IOnlineUsersState => ({
 });
 
 const mapDispatch = (dispatch: Dispatch): IOnlineUsersDispatch => ({
-    onClick: (selected: IdActivitySelectable, identity: string) => dispatch(actionActivitySelect(selected, identity))
+    onClick: (selected: IdActivitySelectable, identity: IAuthUserInfo) => dispatch(actionActivitySelect(selected, identity))
 });
 
 export default connect(mapState, mapDispatch)(OnlineUsersDOM)

@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Fragment} from "react";
+import React, {Fragment} from "react";
 // @ts-ignore
 import logo from "../../logo.svg";
 import {connect} from "react-redux";
@@ -9,10 +9,12 @@ import {ErrorMessage} from "../errorMessage/ErrorMessage";
 import {IdActiveAuthPage} from "./IdActiveAuthPage";
 import "./login.css";
 import {TextField} from "@material-ui/core";
+import {utilPersistence} from "../../util/utilPersistence/utilPersistence";
+import {IdPersistence} from "../../util/utilPersistence/IdPersistence";
 
 interface ILoginState {
     name: string
-    userName: string;
+    email: string;
     password: string;
     activeAuthView: IdActiveAuthPage;
 }
@@ -25,17 +27,36 @@ interface ILoginProps extends ILoginDispatch {}
 
 const initialLoginState: ILoginState = {
     name: '',
-    userName: '',
+    email: '',
     password: '',
     activeAuthView: IdActiveAuthPage.Login
 };
 
 class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
     public state: ILoginState = initialLoginState;
+
+    componentDidMount(): void {
+        const tokenInfo: any = utilPersistence.getValue(IdPersistence.auth);
+        if (tokenInfo.token && tokenInfo.token.email) {
+
+        }
+    }
+
     public render = () => {
-        const {userName, password, name} = this.state;
+        const loginForm = this.logInForm();
+
+        return (
+            <React.Fragment>
+            {loginForm}
+            </React.Fragment>
+        );
+        // return (<h2>Please wait...</h2>)
+    };
+
+    private logInForm = () => {
+        const {email, password, name} = this.state;
         const {onLogin} = this.props;
-        // @ts-ignore
+
         return (
             <div className="App">
                 <header className="content">
@@ -60,7 +81,6 @@ class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
                                     type={"text"}
                                     autoComplete={"off"}
                                 />
-                                {/*<input type="text" name="name" onChange={this.onChange} placeholder="Name"/>*/}
                             </div>
                             }
                             <div>
@@ -69,12 +89,11 @@ class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
                                     label="Email"
                                     margin="normal"
                                     variant="outlined"
-                                    name="userName"
+                                    name="email"
                                     onChange={this.onChange}
                                     type={"email"}
                                     autoComplete={"off"}
                                 />
-                                {/*<input type="text" name="userName" onChange={this.onChange} placeholder="Email"/>*/}
                             </div>
                             <div>
                                 <TextField
@@ -87,10 +106,9 @@ class LoginDOM extends React.PureComponent<ILoginProps, ILoginState> {
                                     type={"password"}
                                     autoComplete={"off"}
                                 />
-                                {/*<input type="password" name="password" onChange={this.onChange} placeholder="Password"/>*/}
                             </div>
                             <div>
-                                <button onClick={() => onLogin({userName, password, name})}>Sign in</button>
+                                <button onClick={() => onLogin({email, password, name})}>Sign in</button>
                             </div>
                         </Fragment>
                     </div>

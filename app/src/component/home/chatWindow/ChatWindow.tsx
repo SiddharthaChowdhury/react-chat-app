@@ -15,7 +15,8 @@ import {IdMessageType, IdSocketVerb, IPrivateMessageForward, IPrivateMessageTrig
 import {thunkActionSendMessage} from "./thunkActionChatWindow";
 import {socket} from "../../../util/utilSocket";
 import {IActivityMessages} from "../activity/IActivityConversation";
-import "./chatWindow.scss"
+import "./chatWindow.scss";
+import {IAuthUserInfo} from "../../../types/IUserInfo";
 import {Grid} from "@material-ui/core";
 
 interface IChatWindowState {
@@ -26,7 +27,7 @@ interface IChatWindowState {
 interface IChatWindowDispatch {
     onMessage: (message: string) => Action<any>
     onMessageSend: (messageInfo: IPrivateMessageTrigger) => Action<any>,
-    onMessageReceived: (conversationMsg: IActivityMessages, identity: string) => Action<any>
+    onMessageReceived: (conversationMsg: IActivityMessages, identity: IAuthUserInfo) => Action<any>
 }
 
 interface IChatWindowProps extends IChatWindowState, IChatWindowDispatch {}
@@ -40,7 +41,7 @@ export const messageSubject$ = messageSubject.pipe(
 
 class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 
-    public state = {input: ''}
+    public state = {input: ''};
 
     componentDidMount(): void {
         const {onMessage, onMessageReceived} = this.props;
@@ -71,28 +72,30 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
         const element = document.getElementById("chatContainer");
 
         if( element ) {
-            element.scrollTop = element.scrollHeight
+            element.scrollTop = element.scrollHeight + 5
         }
 
-        if (!selected && Object.keys(conversation).length === 0) {
+        if (!selected && conversation && Object.keys(conversation).length === 0) {
             // todo: choose self
             return (
                 null
             );
         }
 
-        if (selected === IdActivitySelectable.user || Object.keys(conversation).length > 0) {
+        if ((identity && selected === IdActivitySelectable.user) || (conversation && Object.keys(conversation).length > 0)) {
+            const {email, name}: IAuthUserInfo = identity!;
+
             return (
                 <Grid container className={"chatWindowContainer"}>
                     <Grid item className={"chatIdentityContainer"}>
-                        {identity}
+                        {email}
                     </Grid>
 
                     <Grid item className={"chatWindowWrapper"}>
                         <Grid item id={"chatContainer"} className={"chatContainer"}>
-                            {(conversation[identity!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
+                            {(conversation[email!] || []).map(({message, time, sender}: IActivityMessages, index: number) => {
                                 return (
-                                    <div key={index}>
+                                    <div key={index} className={"msgSegment"}>
                                         <span>{message}</span> &nbsp;<small><i>{sender}</i></small>
                                     </div>
                                 )
@@ -128,12 +131,12 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
             recipient: identity,
             type: IdMessageType.text
         });
-    }
+    };
 
     private handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         messageSubject.next(e.target.value);
         this.setState({input: e.target.value});
-    }
+    };
 }
 
 const mapState = (state: IState): IChatWindowState => ({
@@ -144,7 +147,7 @@ const mapState = (state: IState): IChatWindowState => ({
 const mapDispatch = (dispatch: Dispatch): IChatWindowDispatch => ({
     onMessage: (message: string) => dispatch(actionSetActivityMessage(message)),
     onMessageSend: (messageInfo: IPrivateMessageTrigger) => dispatch(thunkActionSendMessage(messageInfo)),
-    onMessageReceived: (conversationMsg: IActivityMessages, sender: string) => dispatch(actionActivitySetConversation(conversationMsg, sender))
+    onMessageReceived: (conversationMsg: IActivityMessages, sender: IAuthUserInfo) => dispatch(actionActivitySetConversation(conversationMsg, sender))
 });
 
 export const ChatWindow = connect(mapState, mapDispatch)(ChatWindowDOM);

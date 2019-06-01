@@ -1,7 +1,7 @@
 import {IdActivitySelectable} from "./IdActivitySelectable";
 import {Action} from "redux";
 import {IActivityMessages} from "./IActivityConversation";
-import {IUserInfo} from "../../../types/Types";
+import {IAuthUserInfo} from "../../../types/IUserInfo";
 
 export enum TypeActionActivity {
     Select = "Activity > Select",
@@ -12,13 +12,13 @@ export enum TypeActionActivity {
 
 export interface IActionActivity extends Action{
     select?: IdActivitySelectable;
-    identity?: string; // IUserInfo
+    identity?: IAuthUserInfo; // IUserInfo
     message?: string;
     conversation?: IActivityMessages;
     type: TypeActionActivity
 }
 
-export const actionActivitySelect = (select: IdActivitySelectable, identity: string): IActionActivity => ({
+export const actionActivitySelect = (select: IdActivitySelectable, identity: IAuthUserInfo): IActionActivity => ({
     select,
     identity,
     type: TypeActionActivity.Select
@@ -33,7 +33,7 @@ export const actionSetActivityMessage = (message: string): IActionActivity => ({
     type: TypeActionActivity.Message
 });
 
-export const actionActivitySetConversation = (conversation: IActivityMessages, identity?: string, select = IdActivitySelectable.user): IActionActivity => ({
+export const actionActivitySetConversation = (conversation: IActivityMessages, identity?: IAuthUserInfo, select = IdActivitySelectable.user): IActionActivity => ({
     conversation: conversation,
     select,
     identity,

@@ -72,12 +72,16 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
         socket.me = id;
         users[socket.me] = socket;
 
-        // Broadcast fresh list of Online_Users
-        socket.broadcast.emit(IdSocketVerb.online_users, Object.keys(users));
+        const onlineUsers = getOnlineUsers();
+        onlineUsers.then((users: any) => {
+            // Broadcast fresh list of Online_Users
+            socket.broadcast.emit(IdSocketVerb.online_users, users.data);
 
-        callback({
-            msg: 'Registration successful',
-            data: Object.keys(users)
+            callback(users);
+
+            return
+        }).catch(err => {
+            throw err
         });
     });
 
@@ -111,8 +115,33 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
         })
     });
 
+    // Disconnect
     socket.on(IdSocketVerb.disconnect, (reason: any) => {
         delete users[socket.me];
-        socket.broadcast.emit(IdSocketVerb.online_users, Object.keys(users));
+
+        const onlineUsers = getOnlineUsers();
+        onlineUsers.then((users: any) => {
+            socket.broadcast.emit(IdSocketVerb.online_users, users.data);
+        }).catch(err => {
+            throw err;
+        })
     })
 });
+
+
+const getOnlineUsers = () => {
+    return new Promise((resolve, reject) => {
+        const onlineUsers = Object.keys(users).reduce((accu: string, userId: any): string => {
+            return accu + `'${userId}', `
+        }, '');
+        const sql = `SELECT id, name, email FROM user WHERE id IN (${onlineUsers.slice(0, -2)})`;
+        conn.query(sql, (err, result) => {
+            if (err) reject(err);
+
+            resolve({
+                msg: 'Online users',
+                data: result
+            })
+        })
+    })
+}

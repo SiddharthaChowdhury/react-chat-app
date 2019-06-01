@@ -1,4 +1,4 @@
-import React, { PureComponent} from 'react';
+import React, {PureComponent} from 'react';
 import './App.css';
 import {Login} from "../login/Login";
 import {Home} from "../home/Home";
@@ -29,6 +29,7 @@ class AppDOM extends PureComponent<IAppProps> {
     public render = () => {
         const {isLoggedIn} = this.props;
         const deviceInfo: IDeviceTypeInfo = getDeviceTypeInfo();
+
         if(isLoggedIn) {
             return (<Home />)
         }
