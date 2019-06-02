@@ -1,6 +1,6 @@
 import {IdSocketVerb, IPrivateMessageTrigger, ISocketResponse} from "../../../types/Types";
 import {Dispatch} from "redux";
-import {actionActivitySetConversation} from "../activity/actionActivity";
+import {actionActivitySetConversation, actionSetActivityMessage} from "../activity/actionActivity";
 import {socket} from "../../../util/utilSocket";
 
 export const thunkActionSendMessage = (messageInfo: IPrivateMessageTrigger): any => (dispatch: Dispatch) => {
@@ -17,6 +17,7 @@ export const thunkActionSendMessage = (messageInfo: IPrivateMessageTrigger): any
         },
         recipient
     ));
+    dispatch(actionSetActivityMessage(''));
 
     socket.conn.emit(IdSocketVerb.private_msg_trigger, {...messageInfo, id: timeStamp.toString()}, (resp: ISocketResponse<any>) => {
         if (resp.error) {

@@ -89,11 +89,6 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 
     render() {
         const {activity:{selected, identity, conversation}} = this.props;
-        const element = document.getElementById("chatContainer");
-
-        if( element ) {
-            element.scrollTop = element.scrollHeight + 5
-        }
 
         if (!selected && conversation && Object.keys(conversation).length === 0) {
             // todo: choose self
@@ -112,11 +107,45 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                     </Grid>
 
                     <Grid item className={"chatWindowWrapper"}>
-                        <Grid item id={"chatContainer"} className={"chatContainer"}>
+                        <Grid item id={"chatContainer"} className={"discussion"}>
                             {(conversation[id!] || []).map(({message, time, sender, name, email}: any, index: number) => {
+                                if (sender === 'You') {
+                                    let orderClass = '';
+
+                                    if (!conversation[id!][index - 1] || conversation[id!][index - 1].sender !== 'You') {
+                                        orderClass = 'sender-first'
+                                    } else if (!conversation[id!][index + 1] || conversation[id!][index + 1].sender !== 'You') {
+                                        orderClass = 'sender-last'
+                                    } else {
+                                        orderClass = 'sender-middle';
+                                    }
+
+                                    return (
+                                        // New component bubble
+                                        <div className={"msgSegment"} key={index}>
+                                            <div className={"bubble sender "+ orderClass} data-userid={sender}>
+                                                <span>{message}</span>
+                                            </div>
+                                        </div>
+                                    )
+                                }
+
+                                let orderClass = '';
+
+                                if (!conversation[id!][index - 1] || conversation[id!][index - 1].sender === 'You') {
+                                    orderClass = 'recipient-first'
+                                } else if (!conversation[id!][index + 1] || conversation[id!][index + 1].sender === 'You') {
+                                    orderClass = 'recipient-last'
+                                } else {
+                                    orderClass = 'recipient-middle';
+                                }
+
                                 return (
-                                    <div key={index} className={"msgSegment"} data-userid={sender}>
-                                        <span>{message}</span> &nbsp;<small><i>{sender === 'You' ? '' : email}</i></small>
+                                    // New component bubble
+                                    <div className={"msgSegment"} key={index}>
+                                        <div className={"bubble recipient " + orderClass} data-userid={sender}>
+                                            <span>{message}</span> &nbsp;<small><i>{email}</i></small>
+                                        </div>
                                     </div>
                                 )
                             })}
@@ -135,6 +164,18 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
             <div>Room coming soon</div>
         )
     }
+
+    componentDidUpdate (): void {
+        this.triggerAutoScrollBottom()
+    }
+
+    private triggerAutoScrollBottom = () => {
+        const element = document.getElementById("chatContainer");
+
+        if( element ) {
+            element.scrollTop = element.scrollHeight - element.clientHeight
+        }
+    };
 
     private handleOnKeyDown = (e: any) => {
         if (e.key === "Enter") {
