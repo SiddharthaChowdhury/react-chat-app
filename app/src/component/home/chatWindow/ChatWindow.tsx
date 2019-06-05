@@ -146,7 +146,7 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                                     orderClass = 'recipient-middle';
                                 }
 
-                                if (id === conversationInfo.id) {
+                                if (id === this.props.userInfo.id) {
                                     return null
                                 }
                                 return (
