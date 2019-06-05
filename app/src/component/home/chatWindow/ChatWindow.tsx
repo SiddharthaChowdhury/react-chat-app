@@ -21,6 +21,7 @@ import {IAuthUserInfo} from "../../../types/IUserInfo";
 import {Grid} from "@material-ui/core";
 import {selectOnline} from "../../../selector/selectOnline";
 import {selectUserInfo} from "../../../selector/selectUserInfo";
+import {ChatBubble} from "./ChatBubble";
 
 interface IChatWindowState {
     userInfo: IAuthUserInfo,
@@ -116,51 +117,33 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                             {(conversation[id!] || []).map((conversationInfo: any, index: number) => {
                                 const {message, time, sender, name, email} = conversationInfo;
                                 if (sender === 'You') {
-                                    let orderClass = '';
-
-                                    if (!conversation[id!][index - 1] || conversation[id!][index - 1].sender !== 'You') {
-                                        orderClass = 'sender-first'
-                                    } else if (!conversation[id!][index + 1] || conversation[id!][index + 1].sender !== 'You') {
-                                        orderClass = 'sender-last'
-                                    } else {
-                                        orderClass = 'sender-middle';
-                                    }
 
                                     return (
-                                        // New component bubble
-                                        <div className={"msgSegment"} key={index}>
-                                            <div className={"bubble sender "+ orderClass} data-userid={sender}>
-                                                <span>{message}</span>
-                                            </div>
-                                        </div>
+                                        <ChatBubble
+                                            message={message}
+                                            styleClass={"sender " + this.getStyleOrderClass(conversation[id!], index, true)}
+                                            sender={sender}
+                                        />
                                     )
                                 }
 
-                                let orderClass = '';
-
-                                if (!conversation[id!][index - 1] || conversation[id!][index - 1].sender === 'You') {
-                                    orderClass = 'recipient-first'
-                                } else if (!conversation[id!][index + 1] || conversation[id!][index + 1].sender === 'You') {
-                                    orderClass = 'recipient-last'
-                                } else {
-                                    orderClass = 'recipient-middle';
-                                }
-
                                 if (id === this.props.userInfo.id) {
+                                    // If self chatting
                                     return null
                                 }
+
                                 return (
-                                    // New component bubble
-                                    <div className={"msgSegment"} key={index}>
-                                        <div className={"bubble recipient " + orderClass} data-userid={sender}>
-                                            <span>{message}</span> &nbsp;<small><i>{email}</i></small>
-                                        </div>
-                                    </div>
+                                    <ChatBubble
+                                        message={message}
+                                        styleClass={"recipient " + this.getStyleOrderClass(conversation[id!], index, false)}
+                                        sender={sender}
+                                        email={email}
+                                    />
                                 )
                             })}
                         </Grid>
                         <Grid className={"chatInputContainer"}>
-                            <input className={"chatInput"} type={"search"} onChange={this.handleOnChange} onKeyDown={this.handleOnKeyDown} value={this.state.input}/>
+                            <textarea className={"chatInput"} onChange={this.handleOnChange} onKeyDown={this.handleOnKeyDown} value={this.state.input}/>
                             <button disabled={true}>#</button>
                             <button onClick={this.onSubmit}>Send</button>
                         </Grid>
@@ -187,7 +170,7 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
     };
 
     private handleOnKeyDown = (e: any) => {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
             this.onSubmit();
             this.setState({input: ''})
         }
@@ -205,10 +188,35 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
         }
     };
 
-    private handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    private handleOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         messageSubject.next(e.target.value);
         this.setState({input: e.target.value});
     };
+
+    private getStyleOrderClass = (conversation: Array<any>, index: number, sender: boolean) => {
+        let orderClass = '';
+        if(sender) {
+            if (!conversation[index - 1] || conversation[index - 1].sender !== 'You') {
+                orderClass = 'sender-first'
+            } else if (!conversation[index + 1] || conversation[index + 1].sender !== 'You') {
+                orderClass = 'sender-last'
+            } else {
+                orderClass = 'sender-middle';
+            }
+
+            return orderClass;
+        }
+
+        if (!conversation[index - 1] || conversation[index - 1].sender === 'You') {
+            orderClass = 'recipient-first'
+        } else if (!conversation[index + 1] || conversation[index + 1].sender === 'You') {
+            orderClass = 'recipient-last'
+        } else {
+            orderClass = 'recipient-middle';
+        }
+
+        return orderClass;
+    }
 }
 
 const mapState = (state: IState): IChatWindowState => ({
