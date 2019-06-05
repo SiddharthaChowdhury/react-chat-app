@@ -6,6 +6,7 @@ import {connect} from "react-redux";
 import * as React from "react";
 import {Action, Dispatch} from "redux";
 import {
+    actionActivitySelect,
     actionActivitySetConversation,
     actionSetActivityMessage
 } from "../activity/actionActivity";
@@ -32,6 +33,7 @@ interface IChatWindowDispatch {
     onMessage: (message: string) => Action<any>
     onMessageSend: (messageInfo: IPrivateMessageTrigger) => Action<any>,
     onMessageReceived: (conversationMsg: IActivityMessages, identity: IAuthUserInfo) => Action<any>
+    onNoneSelected: (identity: IAuthUserInfo) => Action<any>
 }
 
 interface IChatWindowProps extends IChatWindowState, IChatWindowDispatch {}
@@ -88,10 +90,13 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
     }
 
     render() {
-        const {activity:{selected, identity, conversation}} = this.props;
+        const {activity:{selected, identity, conversation}, userInfo, onNoneSelected} = this.props;
 
         if (!selected && conversation && Object.keys(conversation).length === 0) {
-            // todo: choose self
+            if (userInfo) {
+                onNoneSelected(userInfo)
+            }
+
             return (
                 null
             );
@@ -108,7 +113,8 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
 
                     <Grid item className={"chatWindowWrapper"}>
                         <Grid item id={"chatContainer"} className={"discussion"}>
-                            {(conversation[id!] || []).map(({message, time, sender, name, email}: any, index: number) => {
+                            {(conversation[id!] || []).map((conversationInfo: any, index: number) => {
+                                const {message, time, sender, name, email} = conversationInfo;
                                 if (sender === 'You') {
                                     let orderClass = '';
 
@@ -140,6 +146,9 @@ class ChatWindowDOM extends React.PureComponent<IChatWindowProps> {
                                     orderClass = 'recipient-middle';
                                 }
 
+                                if (id === conversationInfo.id) {
+                                    return null
+                                }
                                 return (
                                     // New component bubble
                                     <div className={"msgSegment"} key={index}>
@@ -212,7 +221,8 @@ const mapState = (state: IState): IChatWindowState => ({
 const mapDispatch = (dispatch: Dispatch): IChatWindowDispatch => ({
     onMessage: (message: string) => dispatch(actionSetActivityMessage(message)),
     onMessageSend: (messageInfo: IPrivateMessageTrigger) => dispatch(thunkActionSendMessage(messageInfo)),
-    onMessageReceived: (conversationMsg: IActivityMessages, sender: IAuthUserInfo) => dispatch(actionActivitySetConversation(conversationMsg, sender))
+    onMessageReceived: (conversationMsg: IActivityMessages, sender: IAuthUserInfo) => dispatch(actionActivitySetConversation(conversationMsg, sender)),
+    onNoneSelected: (identity: IAuthUserInfo) => dispatch(actionActivitySelect(IdActivitySelectable.user, identity))
 });
 
 export const ChatWindow = connect(mapState, mapDispatch)(ChatWindowDOM);
