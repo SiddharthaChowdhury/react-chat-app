@@ -15,9 +15,10 @@
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.2",
     "react-scripts": "2.1.8",
+    "react-scrollbar": "^0.5.6",
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
-    "responsive-react": "^1.1.1",
+    "responsive-react": "^2.0.1",
     "rxjs": "^6.5.2",
     "socket.io-client": "^2.2.0",
     "typescript": "3.4.3"
@@ -40,6 +41,7 @@
   "devDependencies": {
     "@types/enzyme": "^3.9.3",
     "@types/react-redux": "^7.0.6",
+    "@types/react-scrollbar": "^0.4.10",
     "@types/reactstrap": "^8.0.1",
     "@types/socket.io-client": "^1.4.32",
     "enzyme": "^3.9.0",

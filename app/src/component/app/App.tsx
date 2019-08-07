@@ -1,14 +1,15 @@
 import React, {PureComponent} from 'react';
 import './App.css';
 import {Login} from "../login/Login";
-import {Home} from "../home/Home";
+import {Home} from "../hme/Home";
 import {IState} from "../../config/IState";
 import {thunkActionOnlineUsers} from "../home/onlineUsers/thunkActionOnlineUsers";
 import {Action, Dispatch} from "redux";
 import {selectApp} from "../../selector/selectApp";
 import {connect} from "react-redux";
-import {IdResponsiveRenderOnlyIn, Responsive} from "responsive-react/dist/Responsive";
-import {getDeviceTypeInfo, IDeviceTypeInfo} from "responsive-react";
+import {IDeviceTypeInfo} from "responsive-react/dist/types";
+import {getDeviceTypeInfo} from "responsive-react/dist/utilResponsive";
+import {IdResponsiveRenderOnlyIn, Responsive} from "responsive-react";
 
 interface IAppState {
     isLoggedIn: boolean;
@@ -29,6 +30,7 @@ class AppDOM extends PureComponent<IAppProps> {
     public render = () => {
         const {isLoggedIn} = this.props;
         const deviceInfo: IDeviceTypeInfo = getDeviceTypeInfo();
+        console.log(deviceInfo);
 
         if(isLoggedIn) {
             return (<Home />)
@@ -39,7 +41,7 @@ class AppDOM extends PureComponent<IAppProps> {
                     <Login />
                 </Responsive>
                 <Responsive displayIn={IdResponsiveRenderOnlyIn.Laptop}>
-                    <Login />
+                    <Home />
                 </Responsive>
             </React.Fragment>
         );
