@@ -38,7 +38,8 @@ class AppDOM extends PureComponent<IAppProps> {
         return (
             <React.Fragment>
                 <Responsive displayIn={[IdResponsiveRenderOnlyIn.Mobile, IdResponsiveRenderOnlyIn.Tablet]}>
-                    <Login />
+                    <h3>Mobile app not ready!</h3>
+                    {/*<Login />*/}
                 </Responsive>
                 <Responsive displayIn={IdResponsiveRenderOnlyIn.Laptop}>
                     <Home />
