@@ -3,13 +3,11 @@
   justify-content: center;
   align-items: center;
   .main-box-laptop{
-    width: 80%;
     height: 100%;
     padding: 50px auto;
     min-height: 500px;
   }
   .main-box-mobile{
-    width: 100%;
     height: 100%;
   }
   .main-box{
@@ -20,6 +18,9 @@
     .sideNav {
       border-right: 1px solid #f1f1f1;
       width: 20%;
+      padding-right: 10px;
+      padding-left: 10px;
+      font-size: 14px;
 
       .hide-this {
         display: none;
@@ -36,7 +37,7 @@
       }
 
       .sideNav-section-heading{
-        font-size: 16px;
+        font-size: 14px;
         font-weight: bold;
         margin: 15px 0;
         color: dimgrey;
@@ -103,6 +104,7 @@
           width: 90%;
           display: flex;
           align-items: center;
+          cursor: pointer;
 
           .section-icon{
             margin-right: 10px;
@@ -133,8 +135,22 @@
           border-radius: 5px;
           width: 40px;
           height: 40px;
-          margin-left:50px;
+          margin-left: 15px;
           margin-right: 10px;
+        }
+        .user-name{
+          display: flex;
+          flex-direction: column;
+
+          .user-name-f {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 2px 0;
+          }
+
+          .user-name-l {
+            font-size: 12px;
+          }
         }
       }
       .main-content {width: 100%; height:100%;}
@@ -178,7 +194,6 @@
 
           .textarea {
             position: absolute;
-            width: 70%;
             margin-top: 2px;
             resize: none;
             overflow: hidden;

@@ -5,11 +5,16 @@ import {IState} from "../../config/IState";
 import './home.scss';
 import {Grid} from "@material-ui/core";
 import {IWindowDimensionMetrics} from "responsive-react/dist/types";
-import {getWindowDimension, isMobileDevice, isTabletDevice} from "responsive-react/dist/utilResponsive";
-import {Attachment, MoreVert, Send, TagFaces} from "@material-ui/icons";
+import {
+    getDeviceTypeInfo,
+    getWindowDimension,
+    isMobileDevice,
+    isTabletDevice
+} from "responsive-react/dist/utilResponsive";
+import {Camera, MoreVert, Send, TagFaces} from "@material-ui/icons";
 import {ScrollSection} from "../generic/scrollBar/ScrollSection";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faCircle, faHashtag, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faCircle, faEllipsisH, faHashtag, faPlus} from "@fortawesome/free-solid-svg-icons";
 
 interface IHomeState {
 }
@@ -21,7 +26,7 @@ interface IHomeProps extends IHomeState, IHomeDispatch {
 }
 
 class HomeDOM extends React.Component<IHomeProps> {
-    public readonly state = {...getWindowDimension(), channelMoreOpen: false, peopleMoreOpen: false};
+    public readonly state = {...getWindowDimension(), channelMoreOpen: false, peopleMoreOpen: false, deviceVariant: getDeviceTypeInfo().deviceTypeVariant};
     render () {
         const {height} = this.state;
         const companyName = "Dummy Company Private Limited ";
@@ -31,15 +36,18 @@ class HomeDOM extends React.Component<IHomeProps> {
             important: ["Team Dummy", "BackEnd", "FrontEnd", "Sales", "Bug report"],
             more: ["Happy birthday", "Personal", "Lunch", "Games", "Holidays"]
         };
-
         const people = {
-            important: ["Mr None (you)","Super Man", "Tony Stark", "Captain Marvel", "Hawk Eye"],
+            important: ["Siddhartha Chowdhury","Super Man", "Tony Stark", "Captain Marvel", "Hawk Eye"],
             more: ["Stan Lee", "Robin", "Dr Ben", "Super Man", "Tony Stark", "Captain Marvel"]
         };
 
+        const deviceVariant = this.state.deviceVariant;
+        const mainBoxWidth: React.CSSProperties = { width: deviceVariant === 'LaptopSmall' || isMobileDevice() ? '100%' : '80%'};
+        const textArea: React.CSSProperties = { width: deviceVariant === 'LaptopSmall' || isMobileDevice() ? '70%' : '77%'};
+
         return (
             <Grid container className={"container"} style={{height}}>
-                <Grid item className={ isMobileDevice() || isTabletDevice() ? "main-box-mobile main-box" : "main-box-laptop main-box"}>
+                <Grid item style={mainBoxWidth} className={ isMobileDevice() || isTabletDevice() ? "main-box-mobile main-box" : "main-box-laptop main-box"}>
                     <Grid item className={"sideNav"}>
                         <div className={"sideNav-header"}>
                             <div className={"logo"}>
@@ -63,17 +71,17 @@ class HomeDOM extends React.Component<IHomeProps> {
                             </div>
                             <ScrollSection className={"sideNav-sections"}>
                                 <div className={"sideNav-section-important"}>
-                                    {channels.important.map((section: any, index: number) =>
+                                    {channels.important.map((channel: any, index: number) =>
                                         <div className={"section-element"} key={index}>
                                             <FontAwesomeIcon className={"section-icon"} icon={faHashtag} />
-                                            <div>{section}</div>
+                                            <div>{this.getLengthFilteredName(channel)}</div>
                                         </div>
                                     )}
                                 </div>
                                 {this.state.channelMoreOpen && !this.state.peopleMoreOpen && channels.more.map((channel: any, index: number) =>
                                     <div className={"section-element"} key={index}>
                                         <FontAwesomeIcon className={"section-icon"} icon={faHashtag} />
-                                        <div>{channel}</div>
+                                        <div>{this.getLengthFilteredName(channel)}</div>
                                     </div>
                                 )}
                             </ScrollSection>
@@ -88,17 +96,17 @@ class HomeDOM extends React.Component<IHomeProps> {
                             </div>
                             <ScrollSection className={"sideNav-sections"}>
                                 <div className={"sideNav-section-important"}>
-                                    {people.important.map((section: any, index: number) =>
+                                    {people.important.map((person: any, index: number) =>
                                         <div className={"section-element"} key={index}>
                                             <FontAwesomeIcon className={"section-icon icon-online"} icon={faCircle} />
-                                            <div>{section}</div>
+                                            <div>{this.getLengthFilteredName(person)}</div>
                                         </div>
                                     )}
                                 </div>
                                 {this.state.peopleMoreOpen && !this.state.channelMoreOpen && people.more.map((person: any, index: number) =>
                                     <div className={"section-element"} key={index}>
                                         <FontAwesomeIcon className={"section-icon icon-offline"} icon={faCircle} />
-                                        <div>{person}</div>
+                                        <div>{this.getLengthFilteredName(person)}</div>
                                     </div>
                                 )}
                             </ScrollSection>
@@ -109,7 +117,10 @@ class HomeDOM extends React.Component<IHomeProps> {
                     <Grid item  className={"content-wrapper"} >
                         <Grid item className={"content-top"}>
                             <div className="user-avatar"/>
-                            <h4>Siddhartha</h4>
+                            <div className={"user-name"}>
+                                <div className={"user-name-f"}>Siddhartha</div>
+                                <div className={"user-name-l"}>Chowdhury</div>
+                            </div>
                         </Grid>
                         <ScrollSection className={"main-content"}>
                             `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`
@@ -117,13 +128,14 @@ class HomeDOM extends React.Component<IHomeProps> {
                         <Grid item className={"content-bot"}>
                             <div className="content-wrapper">
                                 <div className="options-left">
-                                    <div className="option-btn"><Attachment/></div>
+                                    <div className="option-btn"><FontAwesomeIcon className={"section-icon"} icon={faEllipsisH} /></div>
                                     <div className="option-btn"><TagFaces/></div>
                                 </div>
                                 <div className="options-right">
+                                    <div className="option-btn"><Camera/></div>
                                     <div className="option-btn"><Send/></div>
                                 </div>
-                                <textarea className="textarea" placeholder="Start cursing..."/>
+                                <textarea className="textarea" style={textArea} placeholder="Start cursing..."/>
                             </div>
                         </Grid>
                     </Grid>
@@ -142,11 +154,10 @@ class HomeDOM extends React.Component<IHomeProps> {
 
     private handleResize = (e: any) => {
         const dimension: IWindowDimensionMetrics = getWindowDimension();
-        this.setState({...dimension})
-    }
+        this.setState({...dimension});
+    };
 
     private handleChannelMore = (e: any) => {
-        // this.setState({channelMoreOpen: !this.state.channelMoreOpen})
         const newState: any = {channelMoreOpen: !this.state.channelMoreOpen};
         if (this.state.peopleMoreOpen) {
             newState['peopleMoreOpen'] = !this.state.peopleMoreOpen;
@@ -160,6 +171,14 @@ class HomeDOM extends React.Component<IHomeProps> {
         }
         this.setState({...newState});
     };
+
+    private getLengthFilteredName = (name: string): string => {
+        if (this.state.deviceVariant !== 'LaptopSmall') {
+            return name;
+        }
+
+        return name.length > 18 ? name.substr(0, 18) + '...' : name;
+    }
 };
 
 const mapState = (state: IState): IHomeState => ({});
