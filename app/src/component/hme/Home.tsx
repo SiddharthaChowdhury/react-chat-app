@@ -85,7 +85,7 @@ class HomeDOM extends React.Component<IHomeProps> {
                                     </div>
                                 )}
                             </ScrollSection>
-                            <small className={"more"} onClick={this.handleChannelMore}>{this.state.channelMoreOpen ? 'Less' : 'More'}</small>
+                            {channels.more && <small className={"more"} onClick={this.handleChannelMore}>{this.state.channelMoreOpen ? 'Less' : 'More'}</small>}
                         </div>
 
                         {/* --- PEOPLE SECTION ----*/}
@@ -110,7 +110,7 @@ class HomeDOM extends React.Component<IHomeProps> {
                                     </div>
                                 )}
                             </ScrollSection>
-                            <small className={"more"} onClick={this.handlePeopleMore}>{this.state.peopleMoreOpen ? 'Less' : 'More'}</small>
+                            {people.more && <small className={"more"} onClick={this.handlePeopleMore}>{this.state.peopleMoreOpen ? 'Less' : 'More'}</small>}
                         </div>
 
                     </Grid>

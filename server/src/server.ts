@@ -130,7 +130,6 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
     })
 });
 
-
 const getOnlineUsers = () => {
     return new Promise((resolve, reject) => {
         const onlineUsers = Object.keys(users).reduce((accu: string, userId: any): string => {
@@ -146,4 +145,4 @@ const getOnlineUsers = () => {
             })
         })
     })
-}
+};
