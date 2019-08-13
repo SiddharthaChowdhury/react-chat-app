@@ -1,8 +1,0 @@
-{
-  "env":{
-    "PORT": 1337,
-    "sql_user": "root",
-    "sql_pass": "",
-    "sql_db": "dockety"
-  }
-}
