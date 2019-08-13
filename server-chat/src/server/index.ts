@@ -27,6 +27,6 @@ conn.connect((err: Error) => {
     if(err) throw err;
 
     console.log('Database connected!');
-    app.listen(process.env.PORT || 1337, () => console.log(`main-server listening on port: ${process.env.PORT}`))
+    app.listen(process.env.PORT || 1338, () => console.log(`main-server listening on port: ${process.env.PORT}`))
 });
 
