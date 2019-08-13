@@ -17,10 +17,10 @@ app.disable('x-powered-by');
 
 app.use('/', router);
 
-conn.connect((err: Error) => {
-    if(err) throw err;
+// conn.connect((err: Error) => {
+//     if(err) throw err;
 
-    console.log('Database connected!');
+//     console.log('Database connected!');
     app.listen(process.env.PORT || 1337, () => console.log(`main-server listening on port: ${process.env.PORT}`))
-});
+// });
 
