@@ -1,7 +1,10 @@
 import express, {Request, Response} from 'express';
 import { signup } from '../feature/signup/signup';
 import { login } from '../feature/auth/login';
-import { verifyToken, verifyTokenMiddleware } from '../feature/auth/verify';
+import { verifyToken } from '../feature/auth/verify';
+import {addUser} from "../feature/user/addUser";
+import {isValidToken} from "../middlewares/isValidToken";
+import {isValidClient} from "../middlewares/isValidClient";
 export const router = express.Router();
 
 router.get('/', (req: Request, res: Response) => {
@@ -12,7 +15,9 @@ router.post('/signup', signup);
 router.post('/login', login);
 router.post('/verify-token', verifyToken);
 
+router.post('/add-user', isValidToken, isValidClient, addUser);
+
 // Experiment
-router.post('/test', verifyTokenMiddleware, (req: any, res: any) => {
-    return res.json(req.body)
-})
+// router.post('/test', isValidToken, (req: any, res: any) => {
+//     return res.json(req.body)
+// });
