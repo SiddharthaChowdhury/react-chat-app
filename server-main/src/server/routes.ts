@@ -5,6 +5,7 @@ import { verifyToken } from '../feature/auth/verify';
 import {addUser} from "../feature/user/addUser";
 import {isValidToken} from "../middlewares/isValidToken";
 import {isValidClient} from "../middlewares/isValidClient";
+import { getCompanyUsers } from '../feature/user/getUser';
 export const router = express.Router();
 
 router.get('/', (req: Request, res: Response) => {
@@ -16,6 +17,7 @@ router.post('/login', login);
 router.post('/verify-token', verifyToken);
 
 router.post('/add-user', isValidToken, isValidClient, addUser);
+router.post('/get-company-users', isValidToken, isValidClient, getCompanyUsers);
 
 // Experiment
 // router.post('/test', isValidToken, (req: any, res: any) => {

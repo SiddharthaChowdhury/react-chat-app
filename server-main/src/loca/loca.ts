@@ -6,4 +6,5 @@ export enum loca {
 
     msg_authentication_success = 'Authentication successful',
     msg_registration_success = 'Registration was successful!',
+    msg_new_user_created_success = 'New user is created!'
 }

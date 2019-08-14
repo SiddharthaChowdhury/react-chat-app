@@ -18,7 +18,7 @@ export const signup = (req: Request, res:Response) => {
     conn.query('SELECT id FROM user WHERE email = ?', [email], (error: any, results: any, fields: any) => {
         if (error) throw error;
         if (results.length > 0) {
-        return res.status(400).json({ error: loca.error_user_already_exists })
+        return res.status(409).json({ error: loca.error_user_already_exists })
         }
 
         conn.query('INSERT INTO company SET ?', { name: company }, (error: any, companyResults: any) => {
