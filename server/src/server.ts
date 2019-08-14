@@ -43,7 +43,7 @@ export const conn = mysql.createConnection({
     host     : 'localhost',
     user     : 'root',
     password : '',
-    database : 'chat'
+    database : 'dockety'
 });
 
 conn.connect((err: any) => {

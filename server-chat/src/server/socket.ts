@@ -1,17 +1,21 @@
 import socket, {Socket} from 'socket.io';
 import {server} from "./index";
 
-export const io = socket.listen(server, {});
+const io = socket(server, {});
 
-export default {
-    io,
-    connect: () => {
-        io.sockets.on('connection', (socket: Socket) => {
-            console.log('client connected');
+io.on('connect', (socket: Socket) => {
+    console.log('One conn');
 
-            socket.on('echo', (...args: any) => {
-                io.sockets.emit('message', args);
-            });
-        });
-    }
-}
+    // // Disconnect
+    // socket.on('disconnect', (reason: any) => {
+    //     delete users[socket.me];
+    //
+    //     const onlineUsers = getOnlineUsers();
+    //     onlineUsers.then((users: any) => {
+    //         socket.broadcast.emit(IdSocketVerb.online_users, users.data);
+    //     }).catch(err => {
+    //         throw err;
+    //     })
+    // })
+});
+
