@@ -17,9 +17,4 @@ router.post('/login', login);
 router.post('/verify-token', verifyToken);
 
 router.post('/add-user', isValidToken, isValidClient, addUser);
-router.post('/get-company-users', isValidToken, isValidClient, getCompanyUsers);
-
-// Experiment
-// router.post('/test', isValidToken, (req: any, res: any) => {
-//     return res.json(req.body)
-// });
+router.get('/get-company-users', isValidToken, isValidClient, getCompanyUsers);

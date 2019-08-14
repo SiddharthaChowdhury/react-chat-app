@@ -23,24 +23,23 @@ export const addUser = (req: Request, res: Response) => {
     conn.query('SELECT id FROM user WHERE email = ? AND companyId = ?', [email, companyId], (error: any, data: any) => {
         if (error) throw error;
         
-        if (data.length === 0) {
-            conn.query('INSERT INTO user SET ?', { 
-                firstName,
-                lastName,
-                companyName,
-                companyId,
-                email,
-                password: bcrypt.hashSync(password, 6)
-            },
-            (error: any, data: any) => {
-                if (error) throw error;
-    
-                res.status(201);
-                return res.json({ msg: loca.msg_new_user_created_success });
-            })
+        if (data.length !== 0) {
+            res.status(409);
+            return res.json({msg: loca.error_user_already_exists})
         }
-    
-        res.status(409);
-        return res.json({msg: loca.error_user_already_exists})
+
+        conn.query('INSERT INTO user SET ?', {
+            firstName,
+            lastName,
+            companyName,
+            companyId,
+            email,
+            password: bcrypt.hashSync(password, 6)
+        },(error: any, data: any) => {
+            if (error) throw error;
+
+            res.status(201);
+            return res.json({ msg: loca.msg_new_user_created_success });
+        })
     })
 };
