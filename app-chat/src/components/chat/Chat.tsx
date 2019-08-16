@@ -4,11 +4,12 @@ import {connect} from "react-redux";
 import {getWindowDimension, getDeviceTypeInfo, isMobileDevice, isTabletDevice} from 'typed-responsive-react';
 import './chat.scss';
 import {Grid} from "@material-ui/core";
-import {Camera, MoreVert, Send, TagFaces} from "@material-ui/icons";
+import {Camera, Send, TagFaces} from "@material-ui/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faCircle, faEllipsisH, faHashtag, faPlus} from "@fortawesome/free-solid-svg-icons";
+import {faEllipsisH} from "@fortawesome/free-solid-svg-icons";
 import { IState } from '../../setup/IState';
 import { ScrollSection } from '../../generic/scrollBar/ScrollSection';
+import { SideNav } from './sideNav.tsx/SideNav';
 
 interface IChatState {
 }
@@ -20,21 +21,9 @@ interface IChatProps extends IChatState, IChatDispatch {
 }
 
 class ChatDOM extends React.Component<IChatProps> {
-    public readonly state = {...getWindowDimension(), channelMoreOpen: false, peopleMoreOpen: false, deviceVariant: getDeviceTypeInfo().deviceTypeVariant};
+    public readonly state = {...getWindowDimension(), deviceVariant: getDeviceTypeInfo().deviceTypeVariant};
     render () {
         const {height} = this.state;
-        const companyName = "Dummy Company Private Limited ";
-        const shortCompanyName = companyName.length > 28 ? companyName.substr(0, 27) + '...' : companyName;
-
-        const channels = {
-            important: ["Team Dummy", "BackEnd", "FrontEnd", "Sales", "Bug report"],
-            more: ["Happy birthday", "Personal", "Lunch", "Games", "Holidays"]
-        };
-        const people = {
-            important: ["Siddhartha Chowdhury","Super Man", "Tony Stark", "Captain Marvel", "Hawk Eye"],
-            more: ["Stan Lee", "Robin", "Dr Ben", "Super Man", "Tony Stark", "Captain Marvel"]
-        };
-
         const deviceVariant = this.state.deviceVariant;
         const mainBoxWidth: React.CSSProperties = { width: deviceVariant === 'LaptopSmall' || isMobileDevice() ? '100%' : '80%'};
         const textArea: React.CSSProperties = { width: deviceVariant === 'LaptopSmall' || isMobileDevice() ? '70%' : '77%'};
@@ -42,72 +31,8 @@ class ChatDOM extends React.Component<IChatProps> {
         return (
             <Grid container className={"container"} style={{height}}>
                 <Grid item style={mainBoxWidth} className={ isMobileDevice() || isTabletDevice() ? "main-box-mobile main-box" : "main-box-laptop main-box"}>
-                    <Grid item className={"sideNav"}>
-                        <div className={"sideNav-header"}>
-                            <div className={"logo"}>
-                                <div className={"companyName"}>
-                                    <h4>{shortCompanyName}</h4>
-                                </div>
-                            </div>
-                            <div className={"sideNav-header-moreBtn"}>
-                                <MoreVert/>
-                            </div>
-                        </div>
-                        <div className={"sideNav-search"}>
-                            <input type={"text"} className={"search-box"} placeholder={"Search"}/>
-                        </div>
-
-                        {/* --- CHANNEL SECTION ----*/}
-                        <div className={"sideNav-section"}>
-                            <div className={"sideNav-section-heading"}>
-                                <label >CHANNELS</label>
-                                <FontAwesomeIcon className={"section-icon"} icon={faPlus} />
-                            </div>
-                            <ScrollSection className={"sideNav-sections"}>
-                                <div className={"sideNav-section-important"}>
-                                    {channels.important.map((channel: any, index: number) =>
-                                        <div className={"section-element"} key={index}>
-                                            <FontAwesomeIcon className={"section-icon"} icon={faHashtag} />
-                                            <div>{this.getLengthFilteredName(channel)}</div>
-                                        </div>
-                                    )}
-                                </div>
-                                {this.state.channelMoreOpen && !this.state.peopleMoreOpen && channels.more.map((channel: any, index: number) =>
-                                    <div className={"section-element"} key={index}>
-                                        <FontAwesomeIcon className={"section-icon"} icon={faHashtag} />
-                                        <div>{this.getLengthFilteredName(channel)}</div>
-                                    </div>
-                                )}
-                            </ScrollSection>
-                            {channels.more && <small className={"more"} onClick={this.handleChannelMore}>{this.state.channelMoreOpen ? 'Less' : 'More'}</small>}
-                        </div>
-
-                        {/* --- PEOPLE SECTION ----*/}
-                        <div className={"sideNav-section"}>
-                            <div className={"sideNav-section-heading"}>
-                                <label>PEOPLE</label>
-                                <FontAwesomeIcon className={"section-icon"} icon={faPlus} />
-                            </div>
-                            <ScrollSection className={"sideNav-sections"}>
-                                <div className={"sideNav-section-important"}>
-                                    {people.important.map((person: any, index: number) =>
-                                        <div className={"section-element"} key={index}>
-                                            <FontAwesomeIcon className={"section-icon icon-online"} icon={faCircle} />
-                                            <div>{this.getLengthFilteredName(person)}</div>
-                                        </div>
-                                    )}
-                                </div>
-                                {this.state.peopleMoreOpen && !this.state.channelMoreOpen && people.more.map((person: any, index: number) =>
-                                    <div className={"section-element"} key={index}>
-                                        <FontAwesomeIcon className={"section-icon icon-offline"} icon={faCircle} />
-                                        <div>{this.getLengthFilteredName(person)}</div>
-                                    </div>
-                                )}
-                            </ScrollSection>
-                            {people.more && <small className={"more"} onClick={this.handlePeopleMore}>{this.state.peopleMoreOpen ? 'Less' : 'More'}</small>}
-                        </div>
-
-                    </Grid>
+                    <SideNav deviceVariant={this.state.deviceVariant}/>
+                    {/*  */}
                     <Grid item  className={"content-wrapper"} >
                         <Grid item className={"content-top"}>
                             <div className="user-avatar"/>
@@ -150,29 +75,6 @@ class ChatDOM extends React.Component<IChatProps> {
         const dimension = getWindowDimension();
         this.setState({...dimension});
     };
-
-    private handleChannelMore = (e: any) => {
-        const newState: any = {channelMoreOpen: !this.state.channelMoreOpen};
-        if (this.state.peopleMoreOpen) {
-            newState['peopleMoreOpen'] = !this.state.peopleMoreOpen;
-        }
-        this.setState({...newState});
-    };
-    private handlePeopleMore = (e: any) => {
-        const newState: any = {peopleMoreOpen: !this.state.peopleMoreOpen};
-        if (this.state.channelMoreOpen) {
-            newState['channelMoreOpen'] = !this.state.channelMoreOpen;
-        }
-        this.setState({...newState});
-    };
-
-    private getLengthFilteredName = (name: string): string => {
-        if (this.state.deviceVariant !== 'LaptopSmall') {
-            return name;
-        }
-
-        return name.length > 18 ? name.substr(0, 18) + '...' : name;
-    }
 };
 
 const mapState = (state: IState): IChatState => ({});
