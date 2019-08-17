@@ -1,0 +1,30 @@
+.content-top {
+  height: 80px;
+  border-bottom: 1px solid #f1f1f1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .user-avatar{
+    border: 1px solid silver;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    margin-left: 15px;
+    margin-right: 10px;
+  }
+  .user-name{
+    display: flex;
+    flex-direction: column;
+
+    .user-name-f {
+      font-size: 16px;
+      font-weight: bold;
+      margin: 2px 0;
+    }
+
+    .user-name-l {
+      font-size: 12px;
+    }
+  }
+}
