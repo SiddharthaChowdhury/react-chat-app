@@ -4,17 +4,19 @@ import { MoreVert } from "@material-ui/icons";
 import "./sideNav.scss";
 import { Channels } from "./channels/Channels";
 import { People } from "./people/People";
+import {connect} from "react-redux";
+import {IState} from "../../../setup/IState";
+import {selectApp} from "../../../selector/selectApp";
 
-interface ISideNavState {}
-interface ISideNavDispatch {}
-interface ISideNavProps extends ISideNavState, ISideNavDispatch {
+interface ISideNavState {
     deviceVariant: string
 }
+interface ISideNavDispatch {}
+interface ISideNavProps extends ISideNavState, ISideNavDispatch {
+}
 
-
-export class SideNav extends React.Component<ISideNavProps> {
-
-    state = {peopleMoreOpen: false, channelMoreOpen: false}
+class SideNavDOM extends React.Component<ISideNavProps> {
+    state = {peopleMoreOpen: false, channelMoreOpen: false};
 
     render() {
         const companyName = "Dummy Company Private Limited ";
@@ -75,3 +77,9 @@ export class SideNav extends React.Component<ISideNavProps> {
         this.setState({...newState});
     };
 }
+
+const mapState = (state: IState): ISideNavState => ({
+    deviceVariant: selectApp(state).deviceInfo.deviceTypeVariant
+});
+
+export const SideNav = connect(mapState, null)(SideNavDOM);

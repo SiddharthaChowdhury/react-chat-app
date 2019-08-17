@@ -1,7 +1,10 @@
 import * as React from 'react';
-import {Dispatch} from 'redux';
 import {connect} from "react-redux";
-import {getWindowDimension, getDeviceTypeInfo, isMobileDevice, isTabletDevice} from 'typed-responsive-react';
+import {
+    isMobileDevice,
+    isTabletDevice,
+    IDeviceInfo
+} from 'typed-responsive-react';
 import './chat.scss';
 import {Grid} from "@material-ui/core";
 import {Camera, Send, TagFaces} from "@material-ui/icons";
@@ -10,28 +13,29 @@ import {faEllipsisH} from "@fortawesome/free-solid-svg-icons";
 import { IState } from '../../setup/IState';
 import { ScrollSection } from '../../generic/scrollBar/ScrollSection';
 import { SideNav } from './sideNav.tsx/SideNav';
+import {selectApp} from "../../selector/selectApp";
 
 interface IChatState {
+    deviceInfo: IDeviceInfo;
 }
 
 interface IChatDispatch {
 }
-
 interface IChatProps extends IChatState, IChatDispatch {
 }
 
 class ChatDOM extends React.Component<IChatProps> {
-    public readonly state = {...getWindowDimension(), deviceVariant: getDeviceTypeInfo().deviceTypeVariant};
+
     render () {
-        const {height} = this.state;
-        const deviceVariant = this.state.deviceVariant;
+        const {height, deviceTypeVariant} = this.props.deviceInfo;
+        const deviceVariant = deviceTypeVariant;
         const mainBoxWidth: React.CSSProperties = { width: deviceVariant === 'LaptopSmall' || isMobileDevice() ? '100%' : '80%'};
         const textArea: React.CSSProperties = { width: deviceVariant === 'LaptopSmall' || isMobileDevice() ? '70%' : '77%'};
 
         return (
             <Grid container className={"container"} style={{height}}>
                 <Grid item style={mainBoxWidth} className={ isMobileDevice() || isTabletDevice() ? "main-box-mobile main-box" : "main-box-laptop main-box"}>
-                    <SideNav deviceVariant={this.state.deviceVariant}/>
+                    <SideNav />
                     {/*  */}
                     <Grid item  className={"content-wrapper"} >
                         <Grid item className={"content-top"}>
@@ -62,22 +66,13 @@ class ChatDOM extends React.Component<IChatProps> {
             </Grid>
         )
     }
+}
 
-    componentDidMount(): void {
-        window.addEventListener('resize', this.handleResize, false);
+const mapState = (state: IState): IChatState => {
+    return {
+        deviceInfo: selectApp(state).deviceInfo
     }
-
-    componentWillUnmount(): void {
-        window.removeEventListener('resize', this.handleResize, false);
-    }
-
-    private handleResize = (e: any) => {
-        const dimension = getWindowDimension();
-        this.setState({...dimension});
-    };
 };
+// const mapDispatch = (dispatch: Dispatch): IChatState => ({});
 
-const mapState = (state: IState): IChatState => ({});
-const mapDispatch = (dispatch: Dispatch): IChatState => ({});
-
-export const Chat = connect(mapState, mapDispatch)(ChatDOM);
+export const Chat = connect(mapState, null)(ChatDOM);
