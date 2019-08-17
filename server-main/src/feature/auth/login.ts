@@ -11,7 +11,7 @@ export const login = (req: Request, res:Response) => {
     if(!email || !password) {
         return res.status(400).json({error: loca.error_authentication_failed})
     }
-    conn.query('SELECT id, password FROM user WHERE email = ?', [email], (error: any, results: any, fields: any) => {
+    conn.query('SELECT id, password, firstName, lastName, companyName, companyId, avatar FROM user WHERE email = ?', [email], (error: any, results: any) => {
         if (error) throw error;
         if (results.length !== 1) {
             res.status(400);
@@ -19,11 +19,17 @@ export const login = (req: Request, res:Response) => {
         }
 
         const userInfo = results[0];
+        const {firstName, lastName, companyName, companyId, avatar} = userInfo;
         bcrypt.compare(password, userInfo.password).then(function(isValid: boolean) {
             if(isValid) {
                 const tokenPayload: IJwtPayload = {
                     userId:userInfo.id,
                     email,
+                    firstName,
+                    lastName,
+                    companyId,
+                    companyName,
+                    avatar: avatar || undefined
                 };
             
                 const token: string = jwt.sign(tokenPayload);
