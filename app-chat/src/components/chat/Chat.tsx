@@ -7,9 +7,6 @@ import {
 } from 'typed-responsive-react';
 import './chat.scss';
 import {Grid} from "@material-ui/core";
-import {Camera, Send, TagFaces} from "@material-ui/icons";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {faEllipsisH} from "@fortawesome/free-solid-svg-icons";
 import { IState } from '../../setup/IState';
 import { ScrollSection } from '../../generic/scrollBar/ScrollSection';
 import { SideNav } from './sideNav/SideNav';

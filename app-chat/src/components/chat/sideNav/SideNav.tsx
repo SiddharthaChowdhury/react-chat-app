@@ -7,8 +7,10 @@ import { People } from "./people/People";
 import {connect} from "react-redux";
 import {IState} from "../../../setup/IState";
 import {selectApp} from "../../../selector/selectApp";
+import {ICompanyInfo} from "../../../customTypes/ICompanyInfo";
 
 interface ISideNavState {
+    companyInfo: ICompanyInfo;
     deviceVariant: string
 }
 interface ISideNavDispatch {}
@@ -19,7 +21,8 @@ class SideNavDOM extends React.Component<ISideNavProps> {
     state = {peopleMoreOpen: false, channelMoreOpen: false};
 
     render() {
-        const companyName = "Dummy Company Private Limited ";
+        const {deviceVariant, companyInfo: {name}} = this.props;
+        const companyName = name;
         const shortCompanyName = companyName.length > 28 ? companyName.substr(0, 27) + '...' : companyName;
 
         return (
@@ -44,7 +47,7 @@ class SideNavDOM extends React.Component<ISideNavProps> {
                         handleChannelMore={this.handleChannelMore} 
                         channelMoreOpen={this.state.channelMoreOpen}
                         peopleMoreOpen={this.state.peopleMoreOpen}
-                        deviceVariant={this.props.deviceVariant}
+                        deviceVariant={deviceVariant!}
                     />
                 </div>
 
@@ -78,8 +81,13 @@ class SideNavDOM extends React.Component<ISideNavProps> {
     };
 }
 
-const mapState = (state: IState): ISideNavState => ({
-    deviceVariant: selectApp(state).deviceInfo.deviceTypeVariant
-});
+const mapState = (state: IState): ISideNavState => {
+    const {deviceInfo, companyInfo} = selectApp(state);
+
+    return {
+        deviceVariant: deviceInfo.deviceTypeVariant,
+        companyInfo: companyInfo!
+    }
+};
 
 export const SideNav = connect(mapState, null)(SideNavDOM);
