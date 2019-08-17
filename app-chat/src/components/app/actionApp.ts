@@ -2,6 +2,7 @@ import {Action} from "redux";
 import {IAppMessage} from "./reducerApp";
 import {IUserInfoAuth} from "../../customTypes/IUserInfo";
 import {ICompanyInfo} from "../../customTypes/ICompanyInfo";
+import {IDeviceInfo} from "typed-responsive-react";
 
 export enum TypeActionApp {
     LOGIN_REQUEST = "App > Login > Request",
@@ -11,6 +12,8 @@ export enum TypeActionApp {
     SET_MESSAGE = "App > Message > Set",
     AUTO_CLEAR_MESSAGE = "App > Message > AutoClear",
     REMOVE_MESSAGE = "App > Message > Remove",
+
+    UPDATE_DEVICE_INFO = "App > DeviceInfo > Update",
 }
 
 export interface IActionApp extends Action{
@@ -19,6 +22,7 @@ export interface IActionApp extends Action{
     messageId?: number;
     userInfo?: IUserInfoAuth;
     companyInfo?: ICompanyInfo;
+    deviceInfo?: IDeviceInfo;
     type: TypeActionApp;
 }
 
@@ -40,4 +44,9 @@ export const actionAppMessageSet = (messageInfo: Array<IAppMessage>): IActionApp
 export const actionAppMessageRemove = (messageId: number): IActionApp => ({
     messageId,
     type: TypeActionApp.REMOVE_MESSAGE
+});
+
+export const actionUpdateDeviceInfo = (deviceInfo: IDeviceInfo): IActionApp => ({
+    deviceInfo,
+    type: TypeActionApp.UPDATE_DEVICE_INFO
 });
