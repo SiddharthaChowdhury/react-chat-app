@@ -1,14 +1,21 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { IState } from "../../../../setup/IState";
-import { Dispatch } from "redux";
+import {Action, Dispatch} from "redux";
 import "./people.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faCircle } from "@fortawesome/free-solid-svg-icons";
 import { ScrollSection } from "../../../../generic/scrollBar/ScrollSection";
+import {actionPeopleGetList} from "./actionPeople";
+import {IPeopleInfo} from "./IPeopleInfo";
+import {selectPeopleAll} from "../../../../selector/selectPeople";
 
-interface IPeopleState {}
-interface IPeopleDispatch {}
+interface IPeopleState {
+    allPeople: Array<IPeopleInfo>
+}
+interface IPeopleDispatch {
+    onGetAllUsers: () => Action<any>
+}
 interface IPeopleProps extends IPeopleState, IPeopleDispatch {
     handlePeopleMore: any;
     peopleMoreOpen: boolean;
@@ -19,8 +26,8 @@ interface IPeopleProps extends IPeopleState, IPeopleDispatch {
 class PeopleDOM extends React.Component<IPeopleProps> {
     render () {
         const people = {
-            important: ["Siddhartha Chowdhury","Super Man", "Tony Stark", "Captain Marvel", "Hawk Eye"],
-            more: ["Stan Lee", "Robin", "Dr Ben", "Super Man", "Tony Stark", "Captain Marvel"]
+            important: this.props.allPeople,
+            more: []
         };
 
         return (
@@ -31,12 +38,16 @@ class PeopleDOM extends React.Component<IPeopleProps> {
                 </div>
                 <ScrollSection className={"sideNav-sections"}>
                     <div className={"sideNav-section-important"}>
-                        {people.important.map((person: any, index: number) =>
-                            <div className={"section-element"} key={index}>
-                                <FontAwesomeIcon className={"section-icon icon-online"} icon={faCircle} />
-                                <div>{this.getLengthFilteredName(person)}</div>
-                            </div>
-                        )}
+                        {people.important.map((person: IPeopleInfo, index: number) => {
+                            const {firstName, lastName, id} = person;
+
+                            return (
+                                <div className={"section-element"} key={index} data-id={id}>
+                                    <FontAwesomeIcon className={"section-icon icon-online"} icon={faCircle} />
+                                    <div>{this.getLengthFilteredName(firstName + ' ' + lastName)}</div>
+                                </div>
+                            )
+                        })}
                     </div>
                     {this.props.peopleMoreOpen && !this.props.channelMoreOpen && people.more.map((person: any, index: number) =>
                         <div className={"section-element"} key={index}>
@@ -45,9 +56,13 @@ class PeopleDOM extends React.Component<IPeopleProps> {
                         </div>
                     )}
                 </ScrollSection>
-                {people.more && <small className={"more"} onClick={this.props.handlePeopleMore}>{this.props.peopleMoreOpen ? 'Less' : 'More'}</small>}
+                {people.more.length > 0 && <small className={"more"} onClick={this.props.handlePeopleMore}>{this.props.peopleMoreOpen ? 'Less' : 'More'}</small>}
             </>
         )
+    }
+
+    public componentDidMount(): void {
+        this.props.onGetAllUsers();
     }
 
     private getLengthFilteredName = (name: string): string => {
@@ -59,7 +74,11 @@ class PeopleDOM extends React.Component<IPeopleProps> {
     }
 }
 
-const mapState = (state: IState): IPeopleState => ({})
-const mapDispatch = (dispatch: Dispatch): IPeopleState => ({})
+const mapState = (state: IState): IPeopleState => ({
+    allPeople: selectPeopleAll(state)
+});
+const mapDispatch = (dispatch: Dispatch): IPeopleDispatch => ({
+    onGetAllUsers: () => dispatch(actionPeopleGetList())
+});
 
 export const People = connect(mapState, mapDispatch)(PeopleDOM);
