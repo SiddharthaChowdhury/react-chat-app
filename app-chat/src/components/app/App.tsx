@@ -8,6 +8,7 @@ import {IState} from "../../setup/IState";
 import {IReducerApp} from "./reducerApp";
 import {selectApp} from "../../selector/selectApp";
 import {getDeviceTypeInfo, IDeviceInfo} from "typed-responsive-react";
+import {Modal} from "../../generic/modal/Modal";
 
 interface IAppState {
   appInfo: IReducerApp
@@ -37,7 +38,10 @@ class App extends React.Component<IAppProps> {
         }
 
         return (
-          <Chat/>
+            <>
+                <Modal/>
+                <Chat/>
+            </>
         );
     };
 
