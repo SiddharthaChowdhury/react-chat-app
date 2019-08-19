@@ -3,11 +3,11 @@ import {connect} from "react-redux";
 import {IState} from "../../../setup/IState";
 import "./topNav.scss";
 import {Grid} from "@material-ui/core";
-import {IUserInfoAuth} from "../../../customTypes/IUserInfo";
-import {selectApp} from "../../../selector/selectApp";
+import {IReducerActiveView} from "../../activity/activeView/reducerActiveView";
+import {selectActivityActiveView} from "../../../selector/selectActivity";
 
 interface ITopNavState {
-    userInfo: IUserInfoAuth
+    activeViewInfo: IReducerActiveView
 }
 
 interface ITopNavDispatch {
@@ -18,14 +18,14 @@ interface ITopNavProps extends ITopNavState, ITopNavDispatch {
 
 class TopNavDOM extends React.Component<ITopNavProps> {
     render () {
-        const {firstName, lastName} = this.props.userInfo;
+        const {name} = this.props.activeViewInfo;
 
         return (
             <Grid item className={"content-top"}>
                 <div className="user-avatar"/>
                 <div className={"user-name"}>
-                    <div className={"user-name-f"}>{firstName}</div>
-                    <div className={"user-name-l"}>{lastName}</div>
+                    <div className={"user-name-f"}>{name[0]}</div>
+                    <div className={"user-name-l"}>{name[1] || null}</div>
                 </div>
             </Grid>
         )
@@ -33,7 +33,7 @@ class TopNavDOM extends React.Component<ITopNavProps> {
 }
 
 const mapState = (state: IState): ITopNavState => ({
-    userInfo: selectApp(state).userInfo!
+    activeViewInfo: selectActivityActiveView(state)
 });
 // const mapDispatch = (dispatch: Dispatch): ITopNavState => ({});
 

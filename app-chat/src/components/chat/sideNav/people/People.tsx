@@ -11,6 +11,8 @@ import {IPeopleInfo} from "./IPeopleInfo";
 import {selectPeopleAll} from "../../../../selector/selectPeople";
 import {actionModalOpen} from "../../../../generic/modal/actionModal";
 import {IdModal} from "../../../../generic/modal/IdModalRegistry";
+import {IActiveViewInfo, IdActiveViewType} from "../../../activity/activeView/IActiveViewInfo";
+import {actionActiveViewUpdate} from "../../../activity/activeView/actionActiveView";
 
 interface IPeopleState {
     allPeople: Array<IPeopleInfo>
@@ -18,6 +20,7 @@ interface IPeopleState {
 interface IPeopleDispatch {
     onGetAllUsers: () => Action<any>;
     onAddPeople: () => Action<any>;
+    onPeopleClick: (activityInfo: IActiveViewInfo) => Action<any>
 }
 interface IPeopleProps extends IPeopleState, IPeopleDispatch {
     handlePeopleMore: any;
@@ -31,9 +34,10 @@ class PeopleDOM extends React.Component<IPeopleProps> {
         const {allPeople} = this.props;
         const people = {
             important: allPeople.length > 5 ? allPeople.slice(0, 4): allPeople,
-            more:  allPeople.length > 5 ? allPeople.slice(5, allPeople.length): allPeople
+            more:  allPeople.length > 5 ? allPeople.slice(5, allPeople.length): []
         };
 
+        console.log(allPeople)
         return (
             <>
                 <div className={"sideNav-section-heading"}>
@@ -44,21 +48,27 @@ class PeopleDOM extends React.Component<IPeopleProps> {
                     <div className={"sideNav-section-important"}>
                         {people.important.map((person: IPeopleInfo, index: number) => {
                             const {firstName, lastName, id} = person;
+                            const fullName = firstName + ' ' + lastName;
 
                             return (
-                                <div className={"section-element"} key={index} data-id={id}>
+                                <div className={"section-element"} key={index} data-id={id} onClick={() => this.HandlePeopleClick(id, [firstName, lastName])}>
                                     <FontAwesomeIcon className={"section-icon icon-online"} icon={faCircle} />
-                                    <div>{this.getLengthFilteredName(firstName + ' ' + lastName)}</div>
+                                    <div>{this.getLengthFilteredName(fullName)}</div>
                                 </div>
                             )
                         })}
                     </div>
-                    {this.props.peopleMoreOpen && !this.props.channelMoreOpen && people.more.map((person: any, index: number) =>
-                        <div className={"section-element"} key={index}>
-                            <FontAwesomeIcon className={"section-icon icon-offline"} icon={faCircle} />
-                            <div>{this.getLengthFilteredName(person)}</div>
-                        </div>
-                    )}
+                    {this.props.peopleMoreOpen && !this.props.channelMoreOpen && people.more.map((person: IPeopleInfo, index: number) => {
+                        const {firstName, lastName, id} = person;
+                        const fullName = firstName + ' ' + lastName;
+
+                        return (
+                            <div className={"section-element"} key={index} onClick={() => this.HandlePeopleClick(id, [firstName, lastName])}>
+                                <FontAwesomeIcon className={"section-icon icon-offline"} icon={faCircle} />
+                                <div>{this.getLengthFilteredName(fullName)}</div>
+                            </div>
+                        )
+                    })}
                 </ScrollSection>
                 {people.more.length > 0 && <small className={"more"} onClick={this.props.handlePeopleMore}>{this.props.peopleMoreOpen ? 'Less' : 'More'}</small>}
             </>
@@ -75,7 +85,11 @@ class PeopleDOM extends React.Component<IPeopleProps> {
         }
 
         return name.length > 18 ? name.substr(0, 18) + '...' : name;
-    }
+    };
+
+    private HandlePeopleClick = (id: number, name: string[]) => {
+        this.props.onPeopleClick({id, name, type: IdActiveViewType.People})
+    };
 }
 
 const mapState = (state: IState): IPeopleState => ({
@@ -83,7 +97,8 @@ const mapState = (state: IState): IPeopleState => ({
 });
 const mapDispatch = (dispatch: Dispatch): IPeopleDispatch => ({
     onGetAllUsers: () => dispatch(actionPeopleGetList()),
-    onAddPeople: () => dispatch(actionModalOpen(IdModal.AddNewPeople))
+    onAddPeople: () => dispatch(actionModalOpen(IdModal.AddNewPeople)),
+    onPeopleClick: (activityInfo: IActiveViewInfo) => dispatch(actionActiveViewUpdate(activityInfo))
 });
 
 export const People = connect(mapState, mapDispatch)(PeopleDOM);

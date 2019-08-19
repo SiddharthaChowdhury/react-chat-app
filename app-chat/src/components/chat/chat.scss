@@ -20,7 +20,21 @@
         width: 80%;
         flex-direction: column;
 
-        .main-content {width: 100%; height:100%;}
+        .main-content {
+          width: 100%;
+          height:100%;
+          display: flex;
+          flex-direction: row;
+
+          .scrollarea-content {
+            align-self: flex-end;
+            width: 100%;
+
+            .main-content-child {
+              padding: 5px;
+            }
+          }
+        }
       }
     }
    }

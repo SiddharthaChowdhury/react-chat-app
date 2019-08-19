@@ -1,5 +1,5 @@
 export interface IPeopleInfo {
-    id: string;
+    id: number;
     firstName: string;
     lastName: string;
     avatar?: string;

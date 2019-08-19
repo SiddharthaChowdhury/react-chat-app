@@ -1,6 +1,6 @@
 export interface IActiveViewInfo {
     id: number;
-    name: string;
+    name: string[];
     type: IdActiveViewType
 }
 

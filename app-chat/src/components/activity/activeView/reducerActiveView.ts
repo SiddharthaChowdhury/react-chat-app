@@ -6,7 +6,7 @@ export interface IReducerActiveView extends IActiveViewInfo {}
 // TODO: Get this values from localStorage later based on where user quit last time
 const initialActiveViewState: IReducerActiveView = {
     id: 0,
-    name: 'Welcome to this humble awesomeness!',
+    name: ['Welcome!', 'To this humble awesomeness.'],
     type: IdActiveViewType.Welcome
 };
 
