@@ -21,10 +21,12 @@ export interface IReducerApp {
     companyInfo?: ICompanyInfo;
     message?: Array<IAppMessage>;
     deviceInfo: IDeviceInfo;
+    socket: boolean;
 }
 
 const initialAppState: IReducerApp = {
     isLoggedIn: false,
+    socket: false,
     deviceInfo: {...getDeviceTypeInfo()}
 };
 
@@ -38,6 +40,8 @@ export default (state: IReducerApp = initialAppState, action: IActionApp): IRedu
             return reducerAppMessageRemove(state, action);
         case TypeActionApp.UPDATE_DEVICE_INFO:
             return reducerAppUpdateDeviceInfo(state, action);
+        case TypeActionApp.UPDATE_SOCKET_CONNECTION:
+            return reducerAppUpdateSocketConn(state, action);
 
         default:
             return state;
@@ -77,5 +81,12 @@ const reducerAppUpdateDeviceInfo = (state: IReducerApp, {deviceInfo}: IActionApp
     return {
         ...state,
         deviceInfo: {...deviceInfo!}
+    }
+};
+
+const reducerAppUpdateSocketConn = (state: IReducerApp, {socket}: IActionApp): IReducerApp => {
+    return {
+        ...state,
+        socket: socket || false
     }
 };

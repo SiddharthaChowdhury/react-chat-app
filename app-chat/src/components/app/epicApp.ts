@@ -10,6 +10,7 @@ import axios, {AxiosError, AxiosResponse} from 'axios';
 import {IdAppMessageType} from "./reducerApp";
 import {IUserInfoAuth} from "../../customTypes/IUserInfo";
 import {ICompanyInfo} from "../../customTypes/ICompanyInfo";
+import {socketRegister} from "../../utils/utilSocket/socketCall";
 
 export const epicLogin: Epic<Action, Action, IState> = (action$, state$): Observable<any> =>
     action$.pipe(
@@ -49,6 +50,7 @@ export const epicLogin: Epic<Action, Action, IState> = (action$, state$): Observ
                         name: companyName
                     };
 
+                    socketRegister(companyId, userId);
                     return actionAppLoginResponse(userInfo, companyInfo, true)
                 }),
                 catchError((error: AxiosError) => {

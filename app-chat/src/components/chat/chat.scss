@@ -25,6 +25,9 @@
           height:100%;
           display: flex;
           flex-direction: row;
+          background-image: url("http://localhost:1337/asset/logo.png");
+          background-position: bottom left;
+          background-repeat: no-repeat;
 
           .scrollarea-content {
             align-self: flex-end;

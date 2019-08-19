@@ -37,7 +37,6 @@ class PeopleDOM extends React.Component<IPeopleProps> {
             more:  allPeople.length > 5 ? allPeople.slice(5, allPeople.length): []
         };
 
-        console.log(allPeople)
         return (
             <>
                 <div className={"sideNav-section-heading"}>
@@ -45,7 +44,7 @@ class PeopleDOM extends React.Component<IPeopleProps> {
                     <span onClick={this.props.onAddPeople}><FontAwesomeIcon className={"section-icon"} icon={faPlus} /></span>
                 </div>
                 <ScrollSection className={"sideNav-sections"}>
-                    <div className={"sideNav-section-important"}>
+                    <div className={"sideNav-section-important-people"}>
                         {people.important.map((person: IPeopleInfo, index: number) => {
                             const {firstName, lastName, id} = person;
                             const fullName = firstName + ' ' + lastName;

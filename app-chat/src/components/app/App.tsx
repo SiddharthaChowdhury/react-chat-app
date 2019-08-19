@@ -1,6 +1,6 @@
 import React from 'react';
 import { Chat } from '../chat/Chat';
-import {socket} from "../../utils/utilSocket";
+import {socket} from "../../utils/utilSocket/utilSocket";
 import {Action, Dispatch} from "redux";
 import {actionAppLoginRequest, actionUpdateDeviceInfo} from "./actionApp";
 import {connect} from "react-redux";

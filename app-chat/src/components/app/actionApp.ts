@@ -14,6 +14,8 @@ export enum TypeActionApp {
     REMOVE_MESSAGE = "App > Message > Remove",
 
     UPDATE_DEVICE_INFO = "App > DeviceInfo > Update",
+
+    UPDATE_SOCKET_CONNECTION = "App > Socket > Connection"
 }
 
 export interface IActionApp extends Action{
@@ -23,6 +25,7 @@ export interface IActionApp extends Action{
     userInfo?: IUserInfoAuth;
     companyInfo?: ICompanyInfo;
     deviceInfo?: IDeviceInfo;
+    socket?: boolean;
     type: TypeActionApp;
 }
 
@@ -50,3 +53,8 @@ export const actionUpdateDeviceInfo = (deviceInfo: IDeviceInfo): IActionApp => (
     deviceInfo,
     type: TypeActionApp.UPDATE_DEVICE_INFO
 });
+
+export const actionSocketConnectionStatus = (socket: boolean): IActionApp => ({
+    socket,
+    type: TypeActionApp.UPDATE_SOCKET_CONNECTION
+})
