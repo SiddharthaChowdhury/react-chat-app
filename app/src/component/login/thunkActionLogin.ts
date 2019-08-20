@@ -33,7 +33,7 @@ export const thunkActionRequestLogin = (loginInfo: IAuthUserInfo): any => (dispa
         socket.conn.emit(IdSocketVerb.register, id, (resp: ISocketResponse<any>) => {
             if (!resp.error) {
 
-                console.log('socket message', resp);
+                console.log('socket conversation', resp);
                 dispatch(actionLoginResponse({id, email, name},true));
                 dispatch(actionOnlineUsersUpdate(resp.data));
                 return;

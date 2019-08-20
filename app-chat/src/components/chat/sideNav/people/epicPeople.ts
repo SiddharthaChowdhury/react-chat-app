@@ -26,7 +26,7 @@ export const epicPeople: Epic<Action, Action, IState> = (action$, state$): Obser
                 map((response: AxiosResponse) => {
                     const userList: Array<IPeopleInfo> = response.data.data;
 
-                    return actionPeopleSetList(userList)
+                    return actionPeopleSetList(userList.map((user: IPeopleInfo) => ({...user, hasPendingMessage: false})))
                 }),
                 catchError((error: AxiosError) => {
                     console.log('caught error:', error.response!.data.error);

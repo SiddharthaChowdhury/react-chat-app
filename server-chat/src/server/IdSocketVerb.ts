@@ -4,6 +4,22 @@ export interface ISocketResponse {
     data?: any;
 }
 
+export enum IdMessageSource {
+    User_Message = "User_Message",
+    Channel_Message = "Channel_Message"
+}
+
+export interface IMessageInfo {
+    channelId?: number;
+    fromId: number;
+    message: string;
+    createdAt: string;
+    source: IdMessageSource;
+    toId?: number
+    companyId?: number
+}
+
 export enum IdSocketKey {
-    registerUser = "register"
+    registerUser = "register",
+    message = "message"
 }

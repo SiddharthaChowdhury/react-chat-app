@@ -13,6 +13,8 @@ export default (state: IReducerPeople = initialPeopleState, action: IActionPeopl
     switch (action.type) {
         case TypeActionPeople.RESPONSE_LIST:
             return reducerPeopleListSet(state, action);
+        case TypeActionPeople.USER_SET_HIGHLIGHT:
+            return reducerPeopleSetHighlight(state, action);
         default:
             return state;
     }
@@ -23,4 +25,19 @@ const reducerPeopleListSet = (state: IReducerPeople, {peopleList}:IActionPeople)
         ...state,
         allPeople: peopleList!
     }
-}
+};
+
+const reducerPeopleSetHighlight = (state: IReducerPeople, {userId, highlight}: IActionPeople): IReducerPeople => {
+    const updatedAllPeople = state.allPeople.map((user: IPeopleInfo) => {
+        if (user.id === userId) {
+            return {...user, hasPendingMessage: highlight!}
+        }
+
+        return user;
+    });
+
+    return {
+        ...state,
+        allPeople: updatedAllPeople
+    }
+};

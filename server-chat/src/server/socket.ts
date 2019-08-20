@@ -1,7 +1,7 @@
 import socket, {Socket} from 'socket.io';
 import {server} from "./index";
 import {ISocketMap} from "./ISocketMap";
-import {IdSocketKey} from "./IdSocketVerb";
+import {IdSocketKey, IMessageInfo, ISocketResponse} from "./IdSocketVerb";
 
 const io = socket(server, {});
 
@@ -23,7 +23,11 @@ io.on('connect', (socket: Socket) => {
         callback({msg: "Socket up!"});
         return;
 
-    })
+    });
+
+    socket.on(IdSocketKey.message, (payload: IMessageInfo, callback: (resp: ISocketResponse) => any) => {
+        callback({msg: "Success", data: payload})
+    });
 
     // // Disconnect
     // socket.on('disconnect', (reason: any) => {

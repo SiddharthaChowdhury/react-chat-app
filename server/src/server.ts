@@ -85,7 +85,7 @@ io.on(IdSocketVerb.connect, (socket: ISocket) => {
         });
     });
 
-    // Send private message
+    // Send private conversation
     socket.on(IdSocketVerb.private_msg_trigger, (payload: IPrivateMessageTrigger, callback: (resp: ISocketResponse<any>) => any) => {
 
         console.log('payload.recipient.id', payload.recipient.id!);
