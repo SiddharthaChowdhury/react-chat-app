@@ -3,7 +3,9 @@ import {Action} from "redux";
 
 export enum TypeActionConversation {
     RECEIVE = "Conversation > Message > Receive",
-    SEND = "Conversation > Message > Send"
+    SEND = "Conversation > Message > Send",
+
+    END = "Message > Send > Initiated"
 }
 
 export interface IActionConversation extends Action{
@@ -23,3 +25,7 @@ export const actionMessageReceive = (messageInfo: IMessageInfo, messageIndex: nu
     messageIndex,
     type: TypeActionConversation.RECEIVE
 });
+
+export const actionMessageEnd = (): IActionConversation => ({
+    type: TypeActionConversation.END
+})

@@ -10,7 +10,7 @@ import axios, {AxiosError, AxiosResponse} from 'axios';
 import {IdAppMessageType} from "./reducerApp";
 import {IUserInfoAuth} from "../../customTypes/IUserInfo";
 import {ICompanyInfo} from "../../customTypes/ICompanyInfo";
-import {socketRegister} from "../../utils/utilSocket/socketCall";
+import {socketRegister} from "../../utils/utilSocket/socketEmits";
 
 export const epicLogin: Epic<Action, Action, IState> = (action$, state$): Observable<any> =>
     action$.pipe(

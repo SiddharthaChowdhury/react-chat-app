@@ -8,9 +8,11 @@ import {connect} from "react-redux";
 import {IState} from "../../../setup/IState";
 import {selectApp} from "../../../selector/selectApp";
 import {ICompanyInfo} from "../../../customTypes/ICompanyInfo";
+import {IUserInfoAuth} from "../../../customTypes/IUserInfo";
 
 interface ISideNavState {
     companyInfo: ICompanyInfo;
+    userInfo: IUserInfoAuth;
     deviceVariant: string
 }
 interface ISideNavDispatch {}
@@ -21,9 +23,9 @@ class SideNavDOM extends React.Component<ISideNavProps> {
     state = {peopleMoreOpen: false, channelMoreOpen: false};
 
     render() {
-        const {deviceVariant, companyInfo: {name}} = this.props;
-        const companyName = name;
-        const shortCompanyName = companyName.length > 28 ? companyName.substr(0, 27) + '...' : companyName;
+        const {deviceVariant, userInfo: {firstName, lastName}, } = this.props;
+        const name = firstName + ' ' + lastName;
+        const shortCompanyName = name.length > 28 ? name.substr(0, 27) + '...' : name;
 
         return (
             <Grid item className={"sideNav"}>
@@ -82,10 +84,11 @@ class SideNavDOM extends React.Component<ISideNavProps> {
 }
 
 const mapState = (state: IState): ISideNavState => {
-    const {deviceInfo, companyInfo} = selectApp(state);
+    const {deviceInfo, companyInfo, userInfo} = selectApp(state);
 
     return {
         deviceVariant: deviceInfo.deviceTypeVariant,
+        userInfo: userInfo!,
         companyInfo: companyInfo!
     }
 };

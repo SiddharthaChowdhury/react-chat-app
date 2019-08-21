@@ -21,5 +21,6 @@ export interface IMessageInfo {
 
 export enum IdSocketKey {
     registerUser = "register",
-    message = "message"
+    messageOut = "message-out",
+    messageIn = "message-in"
 }

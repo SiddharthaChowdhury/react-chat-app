@@ -15,9 +15,12 @@ export interface IMessageInfo {
     message: string;
     createdAt: string;
     source: IdMessageSource;
+    companyId?: number;
+    toId?: number;
 }
 
 export enum IdSocketKey {
     registerUser = "register",
-    message = "message"
+    messageOut = "message-out",
+    messageIn = "message-in"
 }

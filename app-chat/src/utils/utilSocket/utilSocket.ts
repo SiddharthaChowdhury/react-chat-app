@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import socketOn from "./socketOn";
 
 const server = `http://localhost:1338`;
 export class UtilSocket {
@@ -9,7 +10,8 @@ export class UtilSocket {
     }
 
     private onConnect = () => {
-        console.log('conn established')
+        console.log('conn established');
+        socketOn()
     };
 
     private onDisconnect = () => {

@@ -30,7 +30,7 @@ const reducerConversationUpdate = (state: IReducerConversation, {messageInfo, me
     let channelConv = state.channel;
 
     if(messageInfo!.source === IdMessageSource.Channel_Message) {
-        if(messageInfo!.channelId! in channelConv) {
+        if(messageIndex! in channelConv) {
             channelConv[messageIndex!].push(messageInfo!)
         } else {
             channelConv[messageIndex!] = [messageInfo!]
@@ -38,8 +38,8 @@ const reducerConversationUpdate = (state: IReducerConversation, {messageInfo, me
     }
 
     if(messageInfo!.source === IdMessageSource.User_Message) {
-        if(messageInfo!.fromId in userConv) {
-            userConv[messageIndex!].push(messageInfo!)
+        if(messageIndex! in userConv) {
+            userConv[messageIndex!] = [...userConv[messageIndex!], messageInfo!]
         } else {
             userConv[messageIndex!] = [messageInfo!]
         }
