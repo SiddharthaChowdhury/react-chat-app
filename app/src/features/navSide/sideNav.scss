@@ -1,0 +1,111 @@
+.sideNav {
+  border-right: 1px solid #f1f1f1;
+  width: 20%;
+  padding-right: 10px;
+  padding-left: 10px;
+  font-size: 14px;
+
+  .hide-this {
+    display: none;
+  }
+  .icon-online{
+    font-size: 8px;
+    color: green;
+    margin-top: 3px;
+  }
+  .icon-offline{
+    font-size: 8px;
+    color: lightgrey;
+    margin-top: 3px;
+  }
+
+  .sideNav-section-heading{
+    font-size: 14px;
+    font-weight: bold;
+    margin: 15px 0;
+    color: dimgrey;
+
+    .section-icon{
+      font-weight: lighter;
+      margin-left: 20px;
+      cursor: pointer;
+      color: lightgrey;
+
+      &:hover {
+        color: dimgrey;
+      }
+    }
+  }
+
+  .sideNav-header {
+    height: 60px;
+    display: flex;
+    font-size: 16px;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  .sideNav-search {
+    margin: 0 0 20px 0;
+
+    .search-box{
+      width: 80%;
+      border-style: none;
+      background-color: #f1f1f1;
+      outline: none;
+      height: 40px;
+      border-radius: 3px;
+      padding: 0 10px;
+    }
+  }
+
+  .sideNav-section{
+    display: flex;
+    flex-direction: column;
+
+    .sideNav-sections {
+      max-height: 243px;
+    }
+
+    .section-element {
+      padding: 3px 0;
+      white-space: nowrap;
+      overflow: hidden;
+      margin-left: 15px;
+      width: 90%;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      .section-icon{
+        margin-right: 7px;
+      }
+
+      .new-message-tag {
+        margin-left: 10px;
+        font-size: 10px;
+        color: #ffffff;
+        background-color: #C61881;
+        animation: tagAnimation 5s infinite;
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+    }
+    .more {
+      margin: 15px;
+      cursor: pointer;
+    }
+  }
+}
+
+@-moz-keyframes tagAnimation /* Firefox */ {
+  0% {background:#C61881;}
+  50% {background:#C61818;}
+  100% {background:#C61881;}
+}
+
+@-webkit-keyframes tagAnimation /* Safari and Chrome */ {
+  0% {background:#C61881;}
+  50% {background:#C61818;}
+  100% {background:#C61881;}
+}

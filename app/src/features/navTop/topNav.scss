@@ -1,0 +1,68 @@
+.content-top {
+  height: 80px;
+  border-bottom: 1px solid #f1f1f1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+
+  .user-avatar{
+    border: 1px solid silver;
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+    margin-left: 15px;
+    margin-right: 10px;
+  }
+  .user-name{
+    display: flex;
+    flex-direction: column;
+
+    .user-name-f {
+      font-size: 16px;
+      font-weight: 500;
+      margin: 2px 0;
+    }
+
+    .user-name-l {
+      font-size: 12px;
+    }
+  }
+
+  .channel-name {
+    margin-left: 15px;
+    font-weight: 500;
+  }
+
+  .logged-in-as{
+    margin-left: auto;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    color: #888888;
+
+    .logged-name{
+      font-size: 12px;
+      margin-right: 15px;
+      display: flex;
+      align-items: center;
+
+      .name-tag{
+        background-color: #888888;
+        border-radius: 3px;
+        padding: 5px 10px;
+        color: #ffffff;
+        text-align: center;
+        margin-left: 10px;
+
+        .section-icon{
+          margin-left: 10px;
+        }
+
+        &:hover {
+          background-color: dimgrey;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

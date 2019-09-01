@@ -1,0 +1,43 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .main-box-laptop{
+    height: 100%;
+    padding: 50px auto;
+    min-height: 500px;
+  }
+  .main-box-mobile{
+    height: 100%;
+  }
+  .main-box{
+    border-right: 1px solid #f1f1f1;
+    display: flex;
+
+    .content-wrapper{
+      height: 100%;
+      display: flex;
+      width: 80%;
+      flex-direction: column;
+
+      .main-content {
+        width: 100%;
+        height:100%;
+        display: flex;
+        flex-direction: row;
+        //background-image: url("http://localhost:1337/asset/logo.png");
+        //background-position: bottom left;
+        //background-repeat: no-repeat;
+
+        .scrollarea-content {
+          align-self: flex-end;
+          width: 100%;
+
+          .main-content-child {
+            padding: 5px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.authContainer {
+    .userChoose{
+        padding: 10xp;
+        cursor: pointer;
+        margin: 3px;
+
+        &:hover{
+            background: silver;
+        }
+    }
+}
